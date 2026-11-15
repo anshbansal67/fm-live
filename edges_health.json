@@ -1,7 +1,7 @@
 {
- "ts": "2026-11-15T21:35:54Z",
+ "ts": "2026-11-15T22:40:00Z",
  "source": "mac",
- "overall": "FAIL",
+ "overall": "WARN",
  "checks": {
   "recorder loop": {
    "state": "OK",
@@ -17,7 +17,7 @@
   },
   "record push": {
    "state": "OK",
-   "why": "last push to fm-live 10 min ago"
+   "why": "last push to fm-live 5 min ago"
   },
   "OddsPapi": {
    "state": "WARN",
@@ -28,8 +28,8 @@
    "why": "466 credits left"
   },
   "cloud run": {
-   "state": "FAIL",
-   "why": "last cloud run 134 min ago (shadow, FAIL)"
+   "state": "OK",
+   "why": "last cloud run 19 min ago (shadow, FAIL)"
   },
   "TheRundown": {
    "state": "OK",
@@ -41,7 +41,7 @@
   }
  },
  "gaps_24h": [],
- "status": "FAIL",
- "since": "2026-11-15T21:26:11Z",
- "reason": "cloud run: last cloud run 134 min ago (shadow, FAIL)"
+ "status": "WARN",
+ "since": "2026-11-15T22:35:09Z",
+ "reason": "OddsPapi: no early-picks run found"
 }
