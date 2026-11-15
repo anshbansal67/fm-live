@@ -1,5 +1,6 @@
 {
- "ts": "2026-11-15T12:13:51Z",
+ "ts": "2026-11-15T12:29:00Z",
+ "source": "mac",
  "overall": "WARN",
  "checks": {
   "recorder loop": {
@@ -12,11 +13,11 @@
   },
   "picks feed push": {
    "state": "OK",
-   "why": "last push to fm-live 64 min ago"
+   "why": "last push to fm-live 14 min ago"
   },
   "record push": {
    "state": "OK",
-   "why": "last push to fm-live 24 min ago"
+   "why": "last push to fm-live 5 min ago"
   },
   "OddsPapi": {
    "state": "WARN",
