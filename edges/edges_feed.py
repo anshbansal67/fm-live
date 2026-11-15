@@ -60,13 +60,20 @@ if __name__ == '__main__':
                 if sd.get('win') is None: continue
                 sd['win'] = (round(0.5 + k_ * (sd['win'] - 0.5), 4) if k_ is not None else sd['win']) if shown else None
             if not shown:
-                m['win_note'] = WS.get('too_close_text', 'too close to call on our numbers')
+                m['win_note'] = m.get('win_note') or WS.get('too_close_text', 'too close to call on our numbers')   # lane 3's own note first
                 if m.get('preview'): m['preview'] = ' '.join(x for x in _re.split(r'(?<=[.!?])\s+', m['preview']) if '%' not in x)   # drop the win-chance sentence
     # 15 Nov (coordinator 10:30, launch shape): members get every pick before the start; the free view gets each pick once its match has
     # started (with close and CLV as they arrive), plus only the NUMBER of picks still to start.
     pk = ld('picks_member.json') or ld('picks.json') or {}; P = pk.get('picks', [])   # 15 Nov: full picks (commit-reveal keeps picks.json's upcoming ones hidden)
     started = lambda x: dt.datetime.fromisoformat(str(x.get('start')).replace('Z', '+00:00')) <= now
     pk_free = dict(summary=pk.get('summary'), picks=[x for x in P if started(x)], pending=sum(not started(x) for x in P))
-    json.dump(dict(board=b, players=p, teams=t, picks=dict(summary=pk.get('summary'), picks=P, pending=0)), open(LV + 'edges_member.json', 'w'), separators=(',', ':'))
-    json.dump(dict(board=free_board(b), players=free_players(p), teams=free_teams(t), picks=pk_free), open(LV + 'edges_free.json', 'w'), separators=(',', ':'))
+    # 15 Nov (coordinator 14:25 item 5): lane 1's season ratings, free view: rank and net runs per side (model), win only where win_shown allows
+    SR = ld('season_ratings.json') or {}; WS_ = ld('win_shown.json') or {}
+    def _shown(pool): e_ = (WS_.get('leagues') or {}).get(pool, {}); return bool(e_.get('win_shown', WS_.get('default_shown', False)))
+    season = dict(asof=SR.get('asof'), pools={pool: dict(asof=v.get('asof'), fixtures=v.get('fixtures'), win_shown=_shown(pool),
+                  teams=[dict(team=tm, rank=x.get('rank'), net_runs=x.get('net_runs'), **({'win': x.get('win')} if _shown(pool) else {}))
+                         for tm, x in sorted((v.get('teams') or {}).items(), key=lambda kv: kv[1].get('rank') or 99)])
+                  for pool, v in (SR.get('pools') or {}).items()})
+    json.dump(dict(board=b, players=p, teams=t, picks=dict(summary=pk.get('summary'), picks=P, pending=0), season=season), open(LV + 'edges_member.json', 'w'), separators=(',', ':'))
+    json.dump(dict(board=free_board(b), players=free_players(p), teams=free_teams(t), picks=pk_free, season=season), open(LV + 'edges_free.json', 'w'), separators=(',', ':'))
     print(f"edges feeds: {len((b or {}).get('events', []))} board matches, {len((p or {}).get('matches', []))} player cards, {len((t or {}).get('matches', []))} team cards")

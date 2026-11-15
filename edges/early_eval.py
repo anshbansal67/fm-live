@@ -144,8 +144,12 @@ if '--publish' in sys.argv:
     if os.path.exists(LV + HFN) and os.path.abspath(LV + HFN) != os.path.abspath(os.path.join(Rp, HFN)): open(os.path.join(Rp, HFN), 'w').write(open(LV + HFN).read())
     # 15 Nov (INTEGRATION.md): the free /edges feed goes to fm-live only once switched on (edges_free_publish.flag on the Mac, or
     # EDGES_PUBLISH_FREE=1 in Actions). Never edges_member.json: fm-live is public.
+    try:   # 15 Nov (coordinator 14:30): the record page's "In testing" list, public with the picks
+        subprocess.run([sys.executable, os.path.join(os.path.dirname(os.path.abspath(__file__)), 'edges_ideas.py')], capture_output=True, timeout=60)
+        if os.path.exists(LV + 'edges_ideas.json'): open(os.path.join(Rp, 'edges_ideas.json'), 'w').write(open(LV + 'edges_ideas.json').read())
+    except Exception: pass
     FREE_ON = os.path.exists(LV + 'edges_free_publish.flag') or os.environ.get('EDGES_PUBLISH_FREE') == '1'
     if FREE_ON and os.path.exists(LV + 'edges_free.json'): open(os.path.join(Rp, 'edges_free.json'), 'w').write(open(LV + 'edges_free.json').read())
     XF = 'edges_free.json' if FREE_ON else ''
-    r_ = subprocess.run(f'cd {Rp} && git add picks.json $(test -f {HFN} && echo {HFN}) $(test -n "{XF}" && test -f "{XF}" && echo {XF}) && (git diff --cached --quiet && echo unchanged || (git commit -q -m "picks {asof_}" && (git push -q 2>/dev/null || (git pull -q --rebase origin main && git push -q)) && echo pushed))', shell=True, capture_output=True, text=True)
+    r_ = subprocess.run(f'cd {Rp} && git add picks.json $(test -f {HFN} && echo {HFN}) $(test -n "{XF}" && test -f "{XF}" && echo {XF}) $(test -f edges_ideas.json && echo edges_ideas.json) && (git diff --cached --quiet && echo unchanged || (git commit -q -m "picks {asof_}" && (git push -q 2>/dev/null || (git pull -q --rebase origin main && git push -q)) && echo pushed))', shell=True, capture_output=True, text=True)
     print('picks feed:', (r_.stdout or r_.stderr).strip()[-120:])
