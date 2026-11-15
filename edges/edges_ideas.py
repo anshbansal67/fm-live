@@ -23,8 +23,8 @@ if o: I.append(dict(name='Arm B on ODIs (the-odds-api)', lane=3, stage=3, what='
 # lane 2's finished tests (fixed text, so the Mac and the cloud publish the same list)
 I.append(dict(name='Stale UK prices after the toss', lane=2, stage=2, what='UK books that haven\'t moved when Pinnacle has, in the last 30 min',
               n=16, clv=0.0693, se=0.0206, verdict_at=60, status='failed its registered test on 15 Nov (16 bets, 60 needed): stays dead'))
-I.append(dict(name='First UK quote v Pinnacle', lane=2, stage=1, what='a UK book\'s first price on a fixture against Pinnacle\'s fair price at that moment',
-              n=None, clv=None, se=None, verdict_at=None, status='idea: not yet registered'))
+I.append(dict(name='First UK quote v Pinnacle', lane=2, stage=2, what='a UK book\'s first price on a fixture against Pinnacle\'s fair price at that moment',
+              n=None, clv=None, se=None, verdict_at=100, status='registered 15 Nov; runs once on December prices (new data only)'))
 for f in ('ideas_lane1.json', 'ideas_lane3.json'):
     x = ld(f)
     if isinstance(x, list): I += [d for d in x if isinstance(d, dict) and d.get('name')]
