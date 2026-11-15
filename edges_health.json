@@ -1,5 +1,5 @@
 {
- "ts": "2026-11-15T12:29:00Z",
+ "ts": "2026-11-15T13:33:02Z",
  "source": "mac",
  "overall": "WARN",
  "checks": {
@@ -13,11 +13,11 @@
   },
   "picks feed push": {
    "state": "OK",
-   "why": "last push to fm-live 14 min ago"
+   "why": "last push to fm-live 63 min ago"
   },
   "record push": {
    "state": "OK",
-   "why": "last push to fm-live 5 min ago"
+   "why": "last push to fm-live 25 min ago"
   },
   "OddsPapi": {
    "state": "WARN",
@@ -36,5 +36,8 @@
    "why": "no failures in the last hour"
   }
  },
- "gaps_24h": []
+ "gaps_24h": [],
+ "status": "WARN",
+ "since": "2026-11-15T13:03:07Z",
+ "reason": "OddsPapi: blocked: quota 251/250 (resets monthly)"
 }
