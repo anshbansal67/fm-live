@@ -1,0 +1,1 @@
+TEST, NOT FOR POSTING. Lane 3 checking that a composed spec (kit/compose.py) renders through the draft step. Close this draft without posting.
