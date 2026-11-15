@@ -1,5 +1,5 @@
 {
- "asof": "2026-11-15T22:40Z",
+ "asof": "2026-11-15T23:44Z",
  "stages": {
   "1": "Idea",
   "2": "Registered test on past prices",
@@ -43,6 +43,18 @@
    "se": null,
    "verdict_at": 200,
    "status": "shadow until 30 Nov, then live paper inside the record above"
+  },
+  {
+   "name": "The interim reads (EDGES-VERDICT-SEQ)",
+   "lane": 2,
+   "stage": 3,
+   "what": "each arm judged at 50, 100, 150 and 200 scored picks from 1 Dec, against fixed bars; registered 15 Nov 2026, 22:51 UTC (fm-live commit 17bb755, registered/EDGES-VERDICT-SEQ.md)",
+   "n": 0,
+   "scored": 0,
+   "clv": null,
+   "se": null,
+   "verdict_at": 50,
+   "status": "counts from 1 Dec"
   },
   {
    "name": "Arm B on ODIs (the-odds-api)",
