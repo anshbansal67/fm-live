@@ -1,0 +1,7 @@
+The best bowlers still playing in the BBL, by Fine Margins rating.
+
+The rating is the points of win chance a player adds per match, against an average IPL bowler, on one scale across every league he has played in. Sunil Narine is ranked 2nd of 1,133 rated bowlers.
+
+Every player's page: fine-margins.com/t20/player/sunil-narine
+
+Data: Fine Margins T20 ratings, Cricsheet ball-by-ball.

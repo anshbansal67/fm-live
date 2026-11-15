@@ -1,0 +1,9 @@
+Every T20 competition on one scale, with the IPL at zero.
+
+Of 15 T20 competitions still running, the PSL is the only one whose bowling standard is above the IPL's.
+
+The scale comes from the players the competitions share: when the same batter plays the BBL, the CPL and the IPL, the gaps between his numbers in each say how strong each league is.
+
+The full map: fine-margins.com/t20/competitions
+
+Data: Fine Margins T20 ratings, Cricsheet ball-by-ball.
