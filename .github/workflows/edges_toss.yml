@@ -1,0 +1,43 @@
+# Fine Margins Edges: toss-window poll (arm BT). Every 30 min it checks for a fixture starting within 40 min; if there is one it stays up and
+# polls every 3 min until the start (early_picks.py --toss), then saves state. Same secrets and state as edges.yml.
+name: Edges toss window
+on:
+  schedule: [ { cron: '22,52 * * * *' } ]
+  workflow_dispatch: {}
+concurrency: { group: edges-state, cancel-in-progress: false }
+permissions: { contents: read }
+jobs:
+  toss:
+    runs-on: ubuntu-latest
+    timeout-minutes: 50
+    steps:
+      - uses: actions/checkout@v4
+      - name: Wait for the keys (Ansh pastes them as repository secrets)
+        id: keys
+        env: { K: '${{ secrets.ODDSPAPI_KEY }}' }
+        run: if [ -n "$K" ]; then echo "ok=1" >> "$GITHUB_OUTPUT"; else echo "ODDSPAPI_KEY not set yet; this run does nothing"; fi
+      - uses: actions/setup-python@v5
+        if: steps.keys.outputs.ok == '1'
+        with: { python-version: '3.12' }
+      - if: steps.keys.outputs.ok == '1'
+        run: pip install -q pandas numpy pyarrow
+      - if: steps.keys.outputs.ok == '1'
+        uses: actions/cache/restore@v4
+        with:
+          path: work/output
+          key: edges-state-${{ github.run_id }}
+          restore-keys: edges-state-
+      - if: steps.keys.outputs.ok == '1'
+        run: mkdir -p work/scratch/edge && cp edges/*.py work/scratch/edge/
+      - name: Poll if a match starts within 40 min
+        if: steps.keys.outputs.ok == '1'
+        env:
+          FM_T: '${{ github.workspace }}/work'
+          FM_ACTIONS: '1'
+          ODDSPAPI_KEY: '${{ secrets.ODDSPAPI_KEY }}'
+        run: cd work && python scratch/edge/early_picks.py --toss | tail -2
+      - if: always() && steps.keys.outputs.ok == '1'
+        uses: actions/cache/save@v4
+        with:
+          path: work/output
+          key: edges-state-${{ github.run_id }}
