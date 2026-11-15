@@ -24,7 +24,7 @@ I.append(dict(name='Arm B on the IPL, PSL and T20Is', lane=2, stage=3, what='the
 # 15 Nov: the interim reads, registered publicly before 1 Dec (EDGES-VERDICT-SEQ.md in fm-live): each arm on its own, live picks from 1 Dec
 _live = [p for p in t20 if str(p.get('posted') or '') >= '2026-12-01']
 _sc = sum(1 for p in _live if p.get('clv') is not None); _next = next((k for k in (50, 100, 150, 200) if _sc < k), 200)
-I.append(dict(name='The interim reads (EDGES-VERDICT-SEQ)', lane=2, stage=3, what='each arm judged at 50, 100, 150 and 200 scored picks from 1 Dec, against fixed bars; registered 15 Nov, the text is public in fm-live',
+I.append(dict(name='The interim reads (EDGES-VERDICT-SEQ)', lane=2, stage=3, what='each arm judged at 50, 100, 150 and 200 scored picks from 1 Dec, against fixed bars; registered 15 Nov 2026, 22:51 UTC (fm-live commit 17bb755, registered/EDGES-VERDICT-SEQ.md)',
               n=len(_live), scored=_sc, clv=None, se=None, verdict_at=_next, status=(f'next look at {_next} scored picks in an arm ({_sc} scored so far, both arms)' if _live else 'counts from 1 Dec')))
 o = ld('lane3_odi_record.json')
 if o: I.append(dict(name='Arm B on ODIs (the-odds-api)', lane=3, stage=3, what='the same rule on one-day internationals', n=o.get('n_picks'), scored=o.get('n_scored'),
