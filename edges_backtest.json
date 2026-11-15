@@ -1,0 +1,77 @@
+{
+ "section": "Backtest: the same rule on past prices",
+ "source": "book_early_verdict_fix_1115.txt",
+ "label": "Not live picks. Arm B run over stored prices from 303 earlier T20 fixtures (Blast, CPL, The Hundred, PSL, IPL, BBL), scored against Pinnacle's fair price at the start. It is why the live record exists, not part of it: the samples are small (30 to 68 bets, under the 200 the live verdict needs) and a backtest can flatter a rule in ways live picks can't.",
+ "horizons": [
+  {
+   "horizon": "24 hours before",
+   "bets": 30,
+   "fixtures": 30,
+   "clv": 0.0753,
+   "se": 0.025,
+   "by_league": [
+    {
+     "league": "T20 Blast",
+     "bets": 23,
+     "clv": 0.047
+    },
+    {
+     "league": "CPL",
+     "bets": 4,
+     "clv": 0.104
+    },
+    {
+     "league": "The Hundred",
+     "bets": 2,
+     "clv": 0.297
+    },
+    {
+     "league": "PSL",
+     "bets": 1,
+     "clv": 0.164
+    }
+   ]
+  },
+  {
+   "horizon": "15 minutes before",
+   "bets": 64,
+   "fixtures": 63,
+   "clv": 0.0421,
+   "se": 0.0133,
+   "by_league": [
+    {
+     "league": "T20 Blast",
+     "bets": 38,
+     "clv": 0.044
+    },
+    {
+     "league": "CPL",
+     "bets": 12,
+     "clv": 0.04
+    },
+    {
+     "league": "PSL",
+     "bets": 8,
+     "clv": 0.009
+    },
+    {
+     "league": "IPL",
+     "bets": 4,
+     "clv": 0.083
+    },
+    {
+     "league": "BBL",
+     "bets": 2,
+     "clv": 0.074
+    }
+   ]
+  },
+  {
+   "horizon": "5 minutes before",
+   "bets": 68,
+   "fixtures": 67,
+   "clv": 0.061,
+   "se": 0.011
+  }
+ ]
+}
