@@ -1,5 +1,5 @@
 {
- "ts": "2026-11-15T13:33:02Z",
+ "ts": "2026-11-15T14:36:52Z",
  "source": "mac",
  "overall": "WARN",
  "checks": {
@@ -17,7 +17,7 @@
   },
   "record push": {
    "state": "OK",
-   "why": "last push to fm-live 25 min ago"
+   "why": "last push to fm-live 20 min ago"
   },
   "OddsPapi": {
    "state": "WARN",
