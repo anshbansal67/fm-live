@@ -1,0 +1,14 @@
+{
+ "asof": "2026-11-15T17:50Z",
+ "since": "2026-11-23",
+ "mac_picks": 0,
+ "cloud_picks": 0,
+ "matched": 0,
+ "mac_only": 0,
+ "cloud_only": 0,
+ "same_book": 0,
+ "median_abs_price_diff": null,
+ "median_minutes_cloud_minus_mac": null,
+ "detail_started": [],
+ "note": "Counts cover every pick since the shadow start. Detail lists only picks whose match has started. A cloud-only pick still to start is counted, never shown."
+}
