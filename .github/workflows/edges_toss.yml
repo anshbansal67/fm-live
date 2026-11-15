@@ -49,3 +49,4 @@ jobs:
         with:
           path: work/output
           key: edges-state-${{ github.run_id }}
+# schedule re-registered 15 Nov 2026 18:4x UTC (no-op comment; coordinator 18:25)
