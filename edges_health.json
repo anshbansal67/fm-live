@@ -1,0 +1,34 @@
+{
+ "ts": "2026-11-15T11:09:53Z",
+ "overall": "WARN",
+ "checks": {
+  "recorder loop": {
+   "state": "OK",
+   "why": "last loop 0 min ago"
+  },
+  "picks feed push": {
+   "state": "OK",
+   "why": "last push to fm-live 34 min ago"
+  },
+  "record push": {
+   "state": "OK",
+   "why": "last push to fm-live 30 min ago"
+  },
+  "OddsPapi": {
+   "state": "WARN",
+   "why": "blocked: quota 251/250 (resets monthly)"
+  },
+  "the-odds-api": {
+   "state": "OK",
+   "why": "466 credits left"
+  },
+  "TheRundown": {
+   "state": "OK",
+   "why": "key present"
+  },
+  "lane hooks": {
+   "state": "OK",
+   "why": "no failures in the last hour"
+  }
+ }
+}
