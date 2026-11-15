@@ -9,6 +9,7 @@
 name: Edges record
 on:
   schedule: [ { cron: '7,37 * * * *' } ]
+  push: { branches: [main], paths: ['.github/workflows/edges.yml'] }   # a change to this file starts the chain (bot pushes don't trigger runs)
   workflow_dispatch:
     inputs: { chained: { description: 'started by the previous run (waits for its slot)', required: false, default: '0' } }
 concurrency: { group: edges-state, cancel-in-progress: false }
