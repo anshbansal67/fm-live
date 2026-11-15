@@ -39,7 +39,7 @@ jobs:
         run: |
           mkdir -p work/scratch/edge work/output/markets/live work/output/markets/odds/oa work/secrets
           cp edges/*.py work/scratch/edge/
-          if [ ! -f work/output/markets/live/early_picks.jsonl ] && [ -f edges_seed/early_picks.jsonl ]; then cp edges_seed/early_picks.jsonl work/output/markets/live/; echo "seeded the pick history from edges_seed/"; fi
+          if [ -f edges_seed/seed_id ] && ! cmp -s edges_seed/seed_id work/output/markets/live/seed_id; then cp edges_seed/early_picks.jsonl work/output/markets/live/early_picks.jsonl; cp edges_seed/seed_id work/output/markets/live/seed_id; echo "loaded the Mac's pick history (seed $(cat edges_seed/seed_id))"; fi
           echo "[$(date -u '+%Y-%m-%d %H:%M:%S')Z] snapshot: cloud run ${{ github.run_id }}" >> work/output/markets/live/actions.log
       - name: Prices and picks
         if: steps.keys.outputs.ok == '1'
