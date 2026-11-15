@@ -36,5 +36,10 @@ ov = 'FAIL' if any(v[0] == 'FAIL' for v in C.values()) else 'WARN' if any(v[0] =
 J = dict(ts=now.strftime('%Y-%m-%dT%H:%M:%SZ'), source='cloud' if ACTIONS else 'mac', overall=ov, checks={k: dict(state=a, why=b) for k, (a, b) in C.items()},
          gaps_24h=[dict(start=a_.strftime('%Y-%m-%dT%H:%MZ'), end=b_.strftime('%Y-%m-%dT%H:%MZ'), minutes=round((b_ - a_).total_seconds() / 60)) for a_, b_ in GAPS])
 HF = LV + ('edges_health_cloud.json' if ACTIONS else 'edges_health.json')   # cloud and Mac never overwrite each other's file
+# Ansh HQ reads two fields only: status (OK / WARN / FAIL) and since (when it last changed), plus a one-line reason.
+try: prev = json.load(open(HF))
+except Exception: prev = {}
+J['status'] = ov; J['since'] = prev.get('since') if prev.get('status') == ov and prev.get('since') else J['ts']
+J['reason'] = '; '.join(f'{k}: {v[1]}' for k, v in C.items() if v[0] == ov) if ov != 'OK' else 'all checks OK'
 json.dump(J, open(HF + '.tmp', 'w'), indent=1); os.replace(HF + '.tmp', HF)
 print('edges health:', ov, '|', '; '.join(f'{k}: {v[0]}' for k, v in C.items()))
