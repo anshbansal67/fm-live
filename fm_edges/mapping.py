@@ -3,9 +3,9 @@ import re, difflib
 LEAGUE = {'ilt20': '20921', 'international league t20': '20921', 'big bash league': '8044', 'bbl': '8044', 'sa20': '21275',
           'bangladesh premier league': '8653', 'bpl': '8653', 'super smash': '8654', 'nepal premier league': '23081', 'syed mushtaq ali trophy': '8661',
           'indian premier league': '8048', 'ipl': '8048', 'pakistan super league': '8679', 'psl': '8679'}
-# 15 Nov 17:20 (coordinator): IPL and PSL joined the board. ESPN probe (fast 4313): 8679 = PSL (an April 2026 match found); 8048 is named
-# 'Indian Premier League' but returned no events for April 2025 or 2026, so IPL results may sit under a per-season id (as BBL / ILT20 do):
-# check against ESPN's upcoming list before March. T20Is have no single ESPN league: they settle on the Mac (Betfair) and from Cricsheet.
+# 15 Nov 17:20 (coordinator): IPL and PSL joined the board. ESPN probes (fast 4313, 4316): 8679 = PSL (by ?dates=); 8048 = IPL but only
+# by ?season=YYYY (all 74 matches of 2026; ?dates= returns nothing): espn_result.board fetches the season for it. T20Is have no single
+# ESPN league: they settle on the Mac (Betfair) and from Cricsheet.
 
 def nm(s):
     """Lower-case letters and single spaces, bracketed bits removed. nm('Hyderabad (India)') -> 'hyderabad'."""
