@@ -13,6 +13,32 @@ def free_board(b):
     return dict(asof=b.get('asof'), n_value=b.get('n_value'), note=b.get('note'),
                 events=[dict(match=e['match'], comp=e['comp'], start=e['start'], priced_at=e.get('priced_at'), value=e.get('value'),
                              outcomes=[dict(outcome=o['outcome'], fair_prob=o['fair_prob'], fair_odds=o['fair_odds']) for o in e['outcomes']]) for e in b.get('events', [])])
+
+# 15 Nov (coordinator 18:58, CAP 16): this feed sits beside odds and value alerts, so it's a gambling marketing piece: no player under 25
+# named in it, free or members'. Ages from data/player_meta.csv (date of birth by Cricsheet id). Fails closed: a player whose age can't be
+# found is left out too. FM_MIN_AGE=0 switches it off (tests only).
+MIN_AGE = int(os.environ.get('FM_MIN_AGE', '25'))
+def _ages():
+    import csv, datetime as _d
+    f = os.path.join(T, 'data/player_meta.csv'); A = {}; today = _d.date.today()
+    if not os.path.exists(f): return A
+    for r in csv.DictReader(open(f)):
+        try: b = _d.date.fromisoformat(r['dob']); A[r['cricsheet_id']] = today.year - b.year - ((today.month, today.day) < (b.month, b.day))
+        except Exception: pass
+    return A
+def cap16(p):
+    if not p or not MIN_AGE: return p
+    A = _ages(); dropped = 0
+    for m in p.get('matches', []):
+        ids = {x.get('name'): x.get('id') for sd in (m.get('sides') or []) for k in ('bat', 'bowl') for x in (sd.get(k) or [])}
+        ok = lambda nm, i=None: (A.get(i or ids.get(nm)) or 0) >= MIN_AGE
+        n0 = len(m.get('players') or [])
+        m['players'] = [x for x in (m.get('players') or []) if ok(x.get('name'), x.get('id'))]; dropped += n0 - len(m['players'])
+        for sd in (m.get('sides') or []):
+            for k in ('bat', 'bowl'):
+                if sd.get(k): sd[k] = [x for x in sd[k] if ok(x.get('name'), x.get('id'))]
+    p['cap16'] = f'players under {MIN_AGE} (or of unknown age) left out: this feed sits beside odds'; p['cap16_dropped'] = dropped
+    return p
 def free_players(p):
     if not p: return p
     out = []
@@ -51,7 +77,7 @@ if __name__ == '__main__':
             if m.get('start'): ts_[str(m.get('espn_event') or '')] = m['start']; ts_['|'.join(sorted(m.get('teams') or []))] = m['start']
         for m in p_raw.get('matches', []):
             if not m.get('start'): m['start'] = ts_.get(str(m.get('espn_event') or '')) or ts_.get('|'.join(sorted(m.get('teams') or [])))
-    b, p, t = ld('value_board.json'), upcoming(p_raw, now), upcoming(t_raw, now)
+    b, p, t = ld('value_board.json'), cap16(upcoming(p_raw, now)), upcoming(t_raw, now)
     WS = ld('win_shown.json') or {}   # 15 Nov (coordinator 12:45): the model's win chance only where it beat a coin flip in the backtest (lane 1's win_shown.json)
     if t:
         import re as _re

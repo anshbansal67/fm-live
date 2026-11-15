@@ -30,14 +30,14 @@ rm = mins(rec_t)
 if not ACTIONS: C['record push'] = ('WARN' if rm is None or rm > 90 else 'OK', f'last push to fm-live {rm} min ago' if rm is not None else 'no push found')
 C['OddsPapi'] = ('FAIL', f"blocked: quota {m.group(1)}/{m.group(2)} (resets monthly)") if 'blocked' in ep else (('OK', f'quota {m.group(1)}/{m.group(2)}') if m else ('WARN', 'no early-picks run found'))
 rem = oa.get('remaining'); C['the-odds-api'] = ('FAIL' if rem is not None and rem < 50 else 'WARN' if rem is not None and rem < 100 else 'OK', f'{rem} credits left' if rem is not None else 'no state')   # 15:00 item 7: under 50 -> red
-# 15 Nov (coordinator 15:00 item 7): the cloud run missing for 2 h -> red. Read from the public heartbeat in the fm-live checkout (Mac side);
+# 15 Nov (coordinator 15:00 item 7; 22:00: two missed slots): the cloud run missing for 65 min -> red. Read from the public heartbeat in the fm-live checkout (Mac side);
 # only once a heartbeat has ever been published, so a cloud that hasn't started yet doesn't show red.
 if not ACTIONS:
     hb = os.path.expanduser(os.environ.get('FM_LIVE_DIR', '~/fm-live')) + '/edges_cloud_heartbeat.json'
     if os.path.exists(hb):
         try:
             h = json.load(open(hb)); age = mins(dt.datetime.fromisoformat(str(h.get('ts')).replace('Z', '+00:00')))
-            C['cloud run'] = ('FAIL' if age is None or age > 120 else 'OK', f"last cloud run {age} min ago ({h.get('mode')}, {h.get('status')})")
+            C['cloud run'] = ('FAIL' if age is None or age > 65 else 'OK', f"last cloud run {age} min ago ({h.get('mode')}, {h.get('status')})")
         except Exception: C['cloud run'] = ('WARN', 'heartbeat unreadable')
     else: C['cloud run'] = ('OK', 'no cloud heartbeat yet (not started)')
 C['TheRundown'] = ('OK', 'key present') if rk_ok else ('OK', 'no key yet (collector idle)')

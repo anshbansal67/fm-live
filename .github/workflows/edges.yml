@@ -1,3 +1,5 @@
+# 15 Nov 22:1x (coordinator 22:00): the record and toss runs now start each other (record -> toss -> record ...), each waiting for its
+# own slot; the cron stays as a back-up that restarts the chain if it ever breaks. One concurrency group, so only one chain exists.
 # Fine Margins Edges: the record's must-never-stop steps, every 30 min (LAPTOP_PROOF.md; coordinator 12:30). Lives in fm-live (public repo:
 # unlimited Actions minutes). Built by lane 2; pushed 15 Nov on Ansh's yes, in shadow mode (publishes nothing) until the switch-over.
 # Secrets (Ansh pastes them: fm-live -> Settings -> Secrets and variables -> Actions -> New repository secret):
@@ -7,16 +9,27 @@
 name: Edges record
 on:
   schedule: [ { cron: '7,37 * * * *' } ]
-  workflow_dispatch: {}
+  workflow_dispatch:
+    inputs: { chained: { description: 'started by the previous run (waits for its slot)', required: false, default: '0' } }
 concurrency: { group: edges-state, cancel-in-progress: false }
-permissions: { contents: write }
+permissions: { contents: write, actions: write }   # actions: write lets a run start the next one (the chain)
 env:
   SHADOW: ${{ vars.EDGES_SHADOW || '1' }}          # 1 = build and score, publish nothing (23-29 Nov); set the repo variable to 0 on switch-over
 jobs:
   record:
     runs-on: ubuntu-latest
-    timeout-minutes: 25
+    timeout-minutes: 45
     steps:
+      - name: Wait for this run's slot (a chained run starts early and waits; scheduled or manual runs go now)
+        if: github.event_name == 'workflow_dispatch' && inputs.chained == '1'
+        run: |
+          python3 - <<'PY'
+          import time, datetime as dt
+          slots = [int(x) for x in "7,37".split(',')]
+          now = dt.datetime.now(dt.timezone.utc); m = now.minute + now.second / 60
+          nxt = min((s for s in slots if s >= m), default=slots[0] + 60)
+          wait = max(0, (nxt - m) * 60); print(f"waiting {wait/60:.1f} min for the :{nxt % 60:02d} slot", flush=True); time.sleep(min(wait, 31 * 60))
+          PY
       - uses: actions/checkout@v4
       - name: Wait for the keys (Ansh pastes them as repository secrets)
         id: keys
@@ -100,5 +113,8 @@ jobs:
         with:
           path: work/output
           key: edges-state-${{ github.run_id }}
-# schedule re-registered 15 Nov 2026 18:4x UTC (no-op comment; coordinator 18:25)
-# schedule re-registered 15 Nov 2026 21:1x UTC, second time (no-op comment; scheduled runs stopped after 19:24)
+      - name: "Chain the next run (coordinator 22:00; GitHub's cron stays as a back-up)"
+        if: always()
+        env: { GH_TOKEN: '${{ github.token }}' }
+        run: |
+          gh workflow run edges_toss.yml --repo "$GITHUB_REPOSITORY" --ref main -f chained=1 && echo "next run started: edges_toss.yml" || echo "chain dispatch failed (the cron back-up restarts it)"
