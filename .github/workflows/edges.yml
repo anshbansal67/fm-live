@@ -76,6 +76,19 @@ jobs:
           python scratch/edge/edges_feed.py | tail -1 || true
           if [ "$SHADOW" != "1" ]; then python scratch/edge/tg_alerts.py | tail -1 || true; fi
           if [ "$SHADOW" != "1" ] && [ "${{ vars.PRO_LIVE }}" = "1" ]; then python scratch/edge/pro_alerts.py | tail -1 || true; fi
+      - name: Heartbeat (public; time and status only)
+        if: steps.keys.outputs.ok == '1'
+        run: |
+          python - <<'PY'
+          import json, os
+          h = json.load(open('work/output/markets/live/edges_health_cloud.json')) if os.path.exists('work/output/markets/live/edges_health_cloud.json') else {}
+          json.dump(dict(ts=h.get('ts'), status=h.get('status', 'UNKNOWN'), since=h.get('since'), mode='shadow' if os.environ.get('SHADOW') == '1' else 'live',
+                         run=os.environ.get('GITHUB_RUN_ID')), open('edges_cloud_heartbeat.json', 'w'))
+          PY
+          git config user.name edges-bot; git config user.email edges-bot@users.noreply.github.com
+          if [ "$SHADOW" = "1" ]; then (cd work && FM_T="$PWD" FM_LIVE_DIR="$GITHUB_WORKSPACE" python scratch/edge/compare_shadow.py) || true; fi
+          git add edges_cloud_heartbeat.json $(test -f shadow_compare.json && echo shadow_compare.json)
+          git diff --cached --quiet || { git commit -q -m "edges heartbeat"; for i in 1 2 3; do git push -q && break || { git pull -q --rebase; sleep 5; }; done; }
       - name: Save state
         if: always() && steps.keys.outputs.ok == '1'
         uses: actions/cache/save@v4
