@@ -1,0 +1,7 @@
+How Fine Margins rates T20 players.
+
+Strike rates and economy rates treat every ball alike. Fine Margins rates T20 players in the one thing every ball changes: the chance of winning.
+
+The full method, how it was tested, and where it falls short: fine-margins.com/t20/method
+
+Data: Cricsheet ball-by-ball.
