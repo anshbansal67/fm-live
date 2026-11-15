@@ -44,7 +44,7 @@ def test_nm_and_same():
     assert mapping.nm('Hyderabad (India)') == 'hyderabad' and mapping.same('Melbourne Stars', 'Melbourne Stars Men')
     assert not mapping.same('Perth Scorchers', 'Sydney Sixers')
 @pytest.mark.parametrize('t,lg', [('ILT20', '20921'), ('International League T20', '20921'), ('SA20', '21275'), ('Big Bash League', '8044'),
-                                  ('WBBL', None), ("Women's Big Bash League", None), ('Syed Mushtaq Ali Trophy', '8661'), ('IPL', None)])
+                                  ('WBBL', None), ("Women's Big Bash League", None), ('Syed Mushtaq Ali Trophy', '8661'), ('IPL', '8048'), ('Pakistan Super League', '8679'), ("Women's Premier League", None), ('T20I', None)])   # IPL / PSL joined 15 Nov 17:20
 def test_league_of(t, lg):
     assert mapping.league_of(t) == lg
 

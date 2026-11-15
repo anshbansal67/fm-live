@@ -12,7 +12,7 @@ sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(os.path.abspath(
 K = (os.environ.get('ODDSPAPI_KEY') or open(T + '/secrets/oddspapi.txt').read()).strip(); SHARP = 'pinnacle'   # 15 Nov: env first (GitHub Actions secret), file on the Mac
 UK = {'bet365', 'williamhill', 'paddypower', 'betfred', 'unibet', 'ladbrokes', 'coral', 'betway', '888sport', 'skybet', 'betvictor', 'boylesports'}
 GROUPS = ['pinnacle,bet365,williamhill', 'paddypower,betfred,unibet', 'ladbrokes,coral,betway', 'skybet,betvictor,888sport']
-TOURN = {38749: 'ILT20', 2478: 'Big Bash League', 21578: 'Super Smash', 38741: 'SA20', 20952: 'Bangladesh Premier League'}   # 15 Nov: SMAT and NPL dropped (Pinnacle never prices them; saves metered calls)
+TOURN = {38749: 'ILT20', 2478: 'Big Bash League', 21578: 'Super Smash', 38741: 'SA20', 20952: 'Bangladesh Premier League', 2472: 'Indian Premier League', 14931: 'Pakistan Super League'}   # 15 Nov 17:20 (coordinator): IPL, PSL added, shadow until 30 Nov, 'in testing'   # 15 Nov: SMAT and NPL dropped (Pinnacle never prices them; saves metered calls)
 EXCH = {'betfair-ex', 'matchbook'}
 _last = {}; ERR = {}; PROPS = []   # 15 Nov (lane 2, for lane 1): player-prop quotes seen in the same responses (no extra calls)
 def get(path, p, cool):
@@ -46,16 +46,30 @@ def quota_ok():
     for s in a.get('subscriptions', []):
         if s.get('is_active'): return s.get('request_count', 0) < s.get('request_limit', 0) - 25, s.get('request_count'), s.get('request_limit')
     return False, None, None
+def t20i_tourns(ok):
+    """15 Nov 17:20 (coordinator): men's T20I series join the board. OddsPapi files each series as its own tournament, so the list comes
+    from the tournaments catalogue (op_tourn_27.json; refreshed at most weekly, one metered call, only with quota): International,
+    'T20' or 'Twenty20' in the name, not women's, not A sides, with fixtures to come."""
+    import re
+    f = OD + 'op_tourn_27.json'
+    if ok and (not os.path.exists(f) or time.time() - os.path.getmtime(f) > 7 * 86400):
+        d = get('tournaments', {'sportId': 27}, 2.2)
+        if isinstance(d, list) and d: json.dump(d, open(f, 'w'))
+    try: cat = json.load(open(f))
+    except Exception: return {}
+    return {t['tournamentId']: 'T20I' for t in cat if t.get('categoryName') == 'International' and re.search(r'T20|Twenty20', t.get('tournamentName', ''))
+            and not re.search(r'wom|\bA\b|\bU19\b', t.get('tournamentName', ''), re.I) and (t.get('futureFixtures') or t.get('upcomingFixtures'))}
 def fixtures(now):
     ok, used, lim = quota_ok(); out = []
-    for tid in TOURN:
+    TT = dict(TOURN, **t20i_tourns(ok))
+    for tid in TT:
         f = OD + f'live_fix_{tid}.json'
         stale = (not os.path.exists(f)) or (time.time() - os.path.getmtime(f) > 3*86400)
         if stale and ok:
             d = get('fixtures', {'tournamentId': tid}, 2.2)
             if isinstance(d, list): json.dump(d, open(f, 'w'))
         if not os.path.exists(f) and os.path.exists(OD + f'fix_{tid}.json'): f = OD + f'fix_{tid}.json'   # 15 Nov: quota spent -> the 14 Nov full lists (no metered call)
-        if os.path.exists(f): out += [dict(x, _t=TOURN[tid]) for x in json.load(open(f)) if x.get('statusId') == 0 and pd.Timestamp(x['startTime']) > now]
+        if os.path.exists(f): out += [dict(x, _t=TT[tid]) for x in json.load(open(f)) if x.get('statusId') == 0 and pd.Timestamp(x['startTime']) > now]
     return out, used, lim
 def prices(fid):
     books = {}
