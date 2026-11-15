@@ -3,6 +3,7 @@
 CLV = price x p_close - 1. Verdict per arm after 200 picks: CLV > 0 by >= 2 SE (fixture-clustered)."""
 import os, sys, json, glob, numpy as np, pandas as pd
 T = os.path.expanduser(os.environ.get('FM_T', '~/cricket-project/t20')); LV = T + '/output/markets/live/'
+sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(os.path.abspath(__file__)), '..', '..'))); from fm_edges.switch import stop_if_killed; stop_if_killed('early_eval')   # 15 Nov: the kill switch, checked first
 sys.path.insert(0, T + '/scratch/edge'); ACTIONS = os.environ.get('FM_ACTIONS') == '1'   # 15 Nov: the cloud job (LAPTOP_PROOF.md): no Betfair, results from ESPN
 BR = None if ACTIONS else __import__('bf_rating')
 import espn_result as ER

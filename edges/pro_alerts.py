@@ -6,6 +6,7 @@ The recorder calls this only when secrets/pro_live.flag exists (Ansh's go-ahead)
   python3 pro_alerts.py [--dry]"""
 import os, sys, json, urllib.request, datetime as dt
 T = os.path.expanduser(os.environ.get('FM_T', '~/cricket-project/t20')); LV = T + '/output/markets/live/'
+sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(os.path.abspath(__file__)), '..', '..'))); from fm_edges.switch import stop_if_killed; stop_if_killed('pro_alerts')   # 15 Nov: the kill switch, checked first
 BOOK = {'bet365': 'bet365', 'williamhill': 'William Hill', 'paddypower': 'Paddy Power', 'betfred': 'Betfred', 'unibet': 'Unibet', 'ladbrokes': 'Ladbrokes',
         'coral': 'Coral', 'betway': 'Betway', '888sport': '888sport', 'skybet': 'Sky Bet', 'betvictor': 'BetVictor', 'boylesports': 'BoyleSports'}
 LIVE = os.path.exists(T + '/secrets/pro_live.flag') or os.environ.get('PRO_LIVE') == '1'   # 15 Nov: its own switch, now that the toss poll calls it too

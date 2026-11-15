@@ -63,6 +63,7 @@ jobs:
           FM_LIVE_DIR: '${{ github.workspace }}'
           EDGES_COMMIT_REVEAL: '${{ vars.EDGES_COMMIT_REVEAL }}'   # paid launch: 1 = members' picks hidden until the start (off while unset)
           EDGES_PUBLISH_FREE: '${{ vars.EDGES_PUBLISH_FREE }}'     # 1 = also publish the free /edges feed (off while unset)
+          EDGES_KILL: '${{ vars.EDGES_KILL }}'   # 1 = stop every alert and every publish at once (kill switch)
           ODDSPAPI_KEY: '${{ secrets.ODDSPAPI_KEY }}'
           TELEGRAM_TOKEN: '${{ secrets.TELEGRAM_TOKEN }}'
           TELEGRAM_CHAT: '${{ secrets.TELEGRAM_CHAT }}'

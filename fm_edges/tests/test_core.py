@@ -58,3 +58,12 @@ def test_win_gate():
 def test_health():
     assert health.overall({'a': ('OK', ''), 'b': ('WARN', '')}) == 'WARN' and health.overall({'a': ('FAIL', '')}) == 'FAIL'
     assert health.since({'status': 'WARN', 'since': 't0'}, 'WARN', 't1') == 't0' and health.since({'status': 'OK', 'since': 't0'}, 'WARN', 't1') == 't1'
+
+def test_kill_switch(tmp_path, monkeypatch):
+    from fm_edges import switch
+    monkeypatch.delenv('EDGES_KILL', raising=False); (tmp_path / 'output/markets/live').mkdir(parents=True)
+    assert not switch.killed(str(tmp_path))
+    (tmp_path / 'output/markets/live/EDGES_KILL').write_text('')
+    assert switch.killed(str(tmp_path))
+    with pytest.raises(SystemExit): switch.stop_if_killed('x', str(tmp_path))
+    (tmp_path / 'output/markets/live/EDGES_KILL').unlink(); monkeypatch.setenv('EDGES_KILL', '1'); assert switch.killed(str(tmp_path))

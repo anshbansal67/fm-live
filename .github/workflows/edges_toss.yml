@@ -37,6 +37,7 @@ jobs:
           ODDSPAPI_KEY: '${{ secrets.ODDSPAPI_KEY }}'
           SHADOW: ${{ vars.EDGES_SHADOW || '1' }}
           EDGES_COMMIT_REVEAL: '${{ vars.EDGES_COMMIT_REVEAL }}'
+          EDGES_KILL: '${{ vars.EDGES_KILL }}'   # 1 = stop every alert and every publish at once (kill switch)
           TELEGRAM_TOKEN: '${{ secrets.TELEGRAM_TOKEN }}'
           TELEGRAM_CHAT: '${{ secrets.TELEGRAM_CHAT }}'
           TG_LIVE: '${{ vars.TG_LIVE }}'

@@ -5,6 +5,7 @@ Sources: the-odds-api snapshots (oa/snaps.jsonl, oa_collect.py) and OddsPapi sna
 snapshot per match wins. -> output/markets/live/value_board.json  (python3 value_board.py [--upload] -> the site's members-only feed 'value_board')"""
 import os, re, sys, json, subprocess, pandas as pd
 T = os.path.expanduser(os.environ.get('FM_T', '~/cricket-project/t20')); LV = T + '/output/markets/live/'; OA = T + '/output/markets/odds/oa/'
+sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(os.path.abspath(__file__)), '..', '..'))); from fm_edges.switch import stop_if_killed; stop_if_killed('value_board')   # 15 Nov: the kill switch, checked first
 UKN = {'bet365': 'bet365', 'williamhill': 'William Hill', 'paddypower': 'Paddy Power', 'betfred': 'Betfred', 'unibet': 'Unibet', 'unibet_uk': 'Unibet', 'ladbrokes': 'Ladbrokes',
        'ladbrokes_uk': 'Ladbrokes', 'coral': 'Coral', 'betway': 'Betway', '888sport': '888sport', 'sport888': '888sport', 'skybet': 'Sky Bet', 'betvictor': 'BetVictor',
        'boylesports': 'BoyleSports', 'livescorebet': 'LiveScore Bet', 'virginbet': 'Virgin Bet', 'grosvenor': 'Grosvenor', 'betano_uk': 'Betano', 'casumo': 'Casumo',

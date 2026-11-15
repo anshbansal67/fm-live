@@ -6,6 +6,7 @@ median first-innings total, the top 3 batters (runs, 30+, 50+) and top 3 bowlers
 import os, json, sys
 sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(os.path.abspath(__file__)), '..', '..'))); from fm_edges import feeds as _F   # 15 Nov: what the free view may show lives in fm_edges
 T = os.path.expanduser(os.environ.get('FM_T', '~/cricket-project/t20')); LV = T + '/output/markets/live/'
+sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(os.path.abspath(__file__)), '..', '..'))); from fm_edges.switch import stop_if_killed; stop_if_killed('edges_feed')   # 15 Nov: the kill switch, checked first
 ld = lambda f: json.load(open(LV + f)) if os.path.exists(LV + f) else None
 def free_board(b):
     if not b: return b

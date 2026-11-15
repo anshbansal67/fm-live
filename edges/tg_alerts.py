@@ -6,6 +6,7 @@ Every alert sent is an alert in the public record (same rows as picks.json); eac
   python3 tg_alerts.py --dry     print the messages that would go out, send nothing"""
 import os, sys, json, urllib.request, urllib.parse, datetime as dt
 T = os.path.expanduser(os.environ.get('FM_T', '~/cricket-project/t20')); LV = T + '/output/markets/live/'
+sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(os.path.abspath(__file__)), '..', '..'))); from fm_edges.switch import stop_if_killed; stop_if_killed('tg_alerts')   # 15 Nov: the kill switch, checked first
 BOOK = {'bet365': 'bet365', 'williamhill': 'William Hill', 'paddypower': 'Paddy Power', 'betfred': 'Betfred', 'unibet': 'Unibet', 'ladbrokes': 'Ladbrokes',
         'coral': 'Coral', 'betway': 'Betway', '888sport': '888sport', 'skybet': 'Sky Bet', 'betvictor': 'BetVictor', 'boylesports': 'BoyleSports'}
 ARMS = {'B', 'BT'}
