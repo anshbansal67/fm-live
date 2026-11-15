@@ -1,4 +1,4 @@
-The best batters still playing in the BBL, by Fine Margins rating.
+The best-rated batters who have played in the BBL and are still playing in 2026.
 
 The rating is the points of win chance a player adds per innings, against an average IPL batter, on one scale across every league he has played in. Finn Allen is ranked 5th of 1,074 rated batters.
 
