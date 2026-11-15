@@ -28,18 +28,29 @@ C['gaps over 30 min (24 h)'] = (('FAIL' if GAPS and GAPS[-1][1] == now else 'WAR
 pm = mins(pk_t); C['picks feed push'] = ('WARN' if pm is None or pm > 150 else 'OK', f'last push to fm-live {pm} min ago' if pm is not None else 'no push found')
 rm = mins(rec_t)
 if not ACTIONS: C['record push'] = ('WARN' if rm is None or rm > 90 else 'OK', f'last push to fm-live {rm} min ago' if rm is not None else 'no push found')
-C['OddsPapi'] = ('WARN', f"blocked: quota {m.group(1)}/{m.group(2)} (resets monthly)") if 'blocked' in ep else (('OK', f'quota {m.group(1)}/{m.group(2)}') if m else ('WARN', 'no early-picks run found'))
-rem = oa.get('remaining'); C['the-odds-api'] = ('WARN' if rem is not None and rem < 100 else 'OK', f'{rem} credits left' if rem is not None else 'no state')
+C['OddsPapi'] = ('FAIL', f"blocked: quota {m.group(1)}/{m.group(2)} (resets monthly)") if 'blocked' in ep else (('OK', f'quota {m.group(1)}/{m.group(2)}') if m else ('WARN', 'no early-picks run found'))
+rem = oa.get('remaining'); C['the-odds-api'] = ('FAIL' if rem is not None and rem < 50 else 'WARN' if rem is not None and rem < 100 else 'OK', f'{rem} credits left' if rem is not None else 'no state')   # 15:00 item 7: under 50 -> red
+# 15 Nov (coordinator 15:00 item 7): the cloud run missing for 2 h -> red. Read from the public heartbeat in the fm-live checkout (Mac side);
+# only once a heartbeat has ever been published, so a cloud that hasn't started yet doesn't show red.
+if not ACTIONS:
+    hb = os.path.expanduser(os.environ.get('FM_LIVE_DIR', '~/fm-live')) + '/edges_cloud_heartbeat.json'
+    if os.path.exists(hb):
+        try:
+            h = json.load(open(hb)); age = mins(dt.datetime.fromisoformat(str(h.get('ts')).replace('Z', '+00:00')))
+            C['cloud run'] = ('FAIL' if age is None or age > 120 else 'OK', f"last cloud run {age} min ago ({h.get('mode')}, {h.get('status')})")
+        except Exception: C['cloud run'] = ('WARN', 'heartbeat unreadable')
+    else: C['cloud run'] = ('OK', 'no cloud heartbeat yet (not started)')
 C['TheRundown'] = ('OK', 'key present') if rk_ok else ('OK', 'no key yet (collector idle)')
 C['lane hooks'] = ('WARN', f'{len(hook_fail)} failures in the last hour: ' + '; '.join(hook_fail[-2:])) if hook_fail else ('OK', 'no failures in the last hour')
-ov = 'FAIL' if any(v[0] == 'FAIL' for v in C.values()) else 'WARN' if any(v[0] == 'WARN' for v in C.values()) else 'OK'
+import sys; sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(os.path.abspath(__file__)), '..', '..'))); from fm_edges import health as _H   # 15 Nov: status logic lives in fm_edges
+ov = _H.overall(C)
 J = dict(ts=now.strftime('%Y-%m-%dT%H:%M:%SZ'), source='cloud' if ACTIONS else 'mac', overall=ov, checks={k: dict(state=a, why=b) for k, (a, b) in C.items()},
          gaps_24h=[dict(start=a_.strftime('%Y-%m-%dT%H:%MZ'), end=b_.strftime('%Y-%m-%dT%H:%MZ'), minutes=round((b_ - a_).total_seconds() / 60)) for a_, b_ in GAPS])
 HF = LV + ('edges_health_cloud.json' if ACTIONS else 'edges_health.json')   # cloud and Mac never overwrite each other's file
 # Ansh HQ reads two fields only: status (OK / WARN / FAIL) and since (when it last changed), plus a one-line reason.
 try: prev = json.load(open(HF))
 except Exception: prev = {}
-J['status'] = ov; J['since'] = prev.get('since') if prev.get('status') == ov and prev.get('since') else J['ts']
+J['status'] = ov; J['since'] = _H.since(prev, ov, J['ts'])
 J['reason'] = '; '.join(f'{k}: {v[1]}' for k, v in C.items() if v[0] == ov) if ov != 'OK' else 'all checks OK'
 json.dump(J, open(HF + '.tmp', 'w'), indent=1); os.replace(HF + '.tmp', HF)
 print('edges health:', ov, '|', '; '.join(f'{k}: {v[0]}' for k, v in C.items()))

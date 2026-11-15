@@ -8,6 +8,7 @@ request_count >= request_limit - 25.
   python3 early_picks.py --dry      no writes"""
 import os, re, sys, json, time, urllib.request, urllib.parse, numpy as np, pandas as pd
 T = os.path.expanduser(os.environ.get('FM_T', '~/cricket-project/t20')); LV = T + '/output/markets/live/'; OD = T + '/output/markets/odds/'
+sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(os.path.abspath(__file__)), '..', '..'))); from fm_edges.rule import THRESHOLD, WINDOWS, SUSPECT; from fm_edges.prices import novig as _novig   # 15 Nov: the rule lives in fm_edges
 K = (os.environ.get('ODDSPAPI_KEY') or open(T + '/secrets/oddspapi.txt').read()).strip(); SHARP = 'pinnacle'   # 15 Nov: env first (GitHub Actions secret), file on the Mac
 UK = {'bet365', 'williamhill', 'paddypower', 'betfred', 'unibet', 'ladbrokes', 'coral', 'betway', '888sport', 'skybet', 'betvictor', 'boylesports'}
 GROUPS = ['pinnacle,bet365,williamhill', 'paddypower,betfred,unibet', 'ladbrokes,coral,betway', 'skybet,betvictor,888sport']
@@ -89,18 +90,18 @@ def sweep(fx, now, lo, hi, arm, dry, seen):
             with open(LV + 'player_props.jsonl', 'a') as fp_:
                 for r_ in PROPS: fp_.write(json.dumps(dict(ts=tsn, tournament=x['_t'], start=x['startTime'], hrs=round(hrs, 2), **r_)) + '\n')
         pin = books.get(SHARP); pnv = None
-        if pin: q = [1/pin[0], 1/pin[1]]; pnv = [q[0]/sum(q), q[1]/sum(q)]
+        if pin: pnv = list(_novig(pin[0], pin[1]))
         teams = [x['participant1Name'], x['participant2Name']]
         if not dry: open(LV + 'early_odds.jsonl', 'a').write(json.dumps(dict(ts=pd.Timestamp.now(tz='UTC').isoformat(), fixture_id=x['fixtureId'], tournament=x['_t'], start=x['startTime'], hrs=round(hrs, 2), teams=teams, pinnacle=pin, p_pin=pnv, books=books, src='historical-odds')) + '\n')
         soft = {k: v for k, v in books.items() if k in UK}
         if not pnv or not soft: continue
-        lo_pick, hi_pick = (12, 48) if arm == 'B' else (0, 0.6)
+        lo_pick, hi_pick = WINDOWS[arm]
         if not (lo_pick <= hrs <= hi_pick): continue
         for side in (0, 1):
             bk = max(soft, key=lambda k: soft[k][side]); best = soft[bk][side]
-            if best * pnv[side] >= 1.03 and (x['fixtureId'], side, arm) not in seen and (nm_(teams[side]), pd.Timestamp(x['startTime']).floor('h'), arm) not in seen:
+            if best * pnv[side] >= THRESHOLD and (x['fixtureId'], side, arm) not in seen and (nm_(teams[side]), pd.Timestamp(x['startTime']).floor('h'), arm) not in seen:
                 pk = dict(ts=pd.Timestamp.now(tz='UTC').isoformat(), fixture_id=x['fixtureId'], tournament=x['_t'], start=x['startTime'], hrs=round(hrs, 2), arm=arm, side=side,
-                          team=teams[side], opp=teams[1-side], book=bk, price=best, p_rating=None, p_pin=pnv[side], nbooks=len(soft), gap=round(best*pnv[side]-1, 4), suspect=bool(best*pnv[side] - 1 > 0.10))
+                          team=teams[side], opp=teams[1-side], book=bk, price=best, p_rating=None, p_pin=pnv[side], nbooks=len(soft), gap=round(best*pnv[side]-1, 4), suspect=bool(best*pnv[side] - 1 > SUSPECT))
                 seen.add((x['fixtureId'], side, arm)); seen.add((nm_(teams[side]), pd.Timestamp(x['startTime']).floor('h'), arm)); print(*(('PICK', arm, '(details kept out of the public Actions log)') if os.environ.get('FM_ACTIONS') == '1' else ('PICK', arm, x['_t'], teams[side], '@', best, bk, f'{hrs:.2f}h')), flush=True)
                 if not dry: open(LV + 'early_picks.jsonl', 'a').write(json.dumps(pk) + '\n')
     return n
@@ -125,7 +126,24 @@ if __name__ == '__main__':
         for k in range(14):
             now = pd.Timestamp.now(tz='UTC'); live = [x for x in fx if 0 < (pd.Timestamp(x['startTime']) - now).total_seconds() / 60 <= 35]
             if not live: break
-            n += sweep(live, now, 0, 0.6, 'BT', dry, seen); time.sleep(max(0, 180 - (pd.Timestamp.now(tz='UTC') - now).total_seconds()))
+            sz_ = os.path.getsize(LV + 'early_picks.jsonl') if os.path.exists(LV + 'early_picks.jsonl') else 0
+            n += sweep(live, now, 0, 0.6, 'BT', dry, seen)
+            # 15 Nov (lane 2, latency): a toss-window pick is only useful if the alert goes out before the start. Send it now, from inside the
+            # poll, instead of waiting for the hourly block (Mac) or the next 30-min run (cloud), both usually after the start. Each alert
+            # script keeps its own on/off switch; shadow mode sends nothing.
+            if not dry and os.environ.get('SHADOW', '0') != '1' and os.path.exists(LV + 'early_picks.jsonl') and os.path.getsize(LV + 'early_picks.jsonl') > sz_:
+                # members' page too: picks_member.json (early_eval) and the feeds are otherwise refreshed hourly; the Mac also republishes
+                # picks.json (free period: picks are public before the start); the cloud's toss job can't push, so it doesn't
+                for c_ in ([os.path.join(os.path.dirname(os.path.abspath(__file__)), 'early_eval.py')] + ([] if os.environ.get('FM_ACTIONS') == '1' else ['--publish']),
+                           [os.path.join(os.path.dirname(os.path.abspath(__file__)), 'edges_feed.py')]):
+                    try: __import__('subprocess').run([sys.executable] + c_, capture_output=True, text=True, timeout=240)
+                    except Exception as x: print('toss refresh error', type(x).__name__, flush=True)
+                for a_ in ('tg_alerts.py', 'pro_alerts.py'):
+                    try:
+                        r_ = __import__('subprocess').run([sys.executable, os.path.join(os.path.dirname(os.path.abspath(__file__)), a_)], capture_output=True, text=True, timeout=60)
+                        print(f'toss alert ({a_}):', (r_.stdout or r_.stderr).strip()[-120:], flush=True)
+                    except Exception as x: print('toss alert error', a_, type(x).__name__, flush=True)
+            time.sleep(max(0, 180 - (pd.Timestamp.now(tz='UTC') - now).total_seconds()))
         print(f'early_picks --toss: {n} price sweeps; errors {ERR or 0}', flush=True)
     else:
         n = sweep(fx, now, 1, 48, 'B', dry, seen)

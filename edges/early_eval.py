@@ -6,6 +6,7 @@ T = os.path.expanduser(os.environ.get('FM_T', '~/cricket-project/t20')); LV = T 
 sys.path.insert(0, T + '/scratch/edge'); ACTIONS = os.environ.get('FM_ACTIONS') == '1'   # 15 Nov: the cloud job (LAPTOP_PROOF.md): no Betfair, results from ESPN
 BR = None if ACTIONS else __import__('bf_rating')
 import espn_result as ER
+sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(os.path.abspath(__file__)), '..', '..'))); from fm_edges import clv as _C   # 15 Nov: CLV and the record's summary live in fm_edges
 P = [json.loads(l) for l in open(LV + 'early_picks.jsonl')] if os.path.exists(LV + 'early_picks.jsonl') else []
 if not P: print('BOOK-EARLY LIVE: no paper picks yet'); sys.exit(0)
 import subprocess
@@ -85,7 +86,7 @@ for x in P[P.start < now].itertuples():
     if w is None and BR is not None and x.start < now - pd.Timedelta(hours=3):   # 15 Nov: the Mac falls back to ESPN when Betfair has no settled market
         try: w = ER.result(x.team, x.opp, x.start.isoformat(), x.tournament)
         except Exception: w = None
-    rows.append(dict(arm=x.arm, fixture_id=x.fixture_id, side=x.side, tournament=x.tournament, team=x.team, price=x.price, p_close=pc, src=src, clv=(x.price * pc - 1) if pc else np.nan, won=w))
+    rows.append(dict(arm=x.arm, fixture_id=x.fixture_id, side=x.side, tournament=x.tournament, team=x.team, price=x.price, p_close=pc, src=src, clv=_C.clv(x.price, pc) if pc else np.nan, won=w))
 R = pd.DataFrame(rows, columns=['arm', 'fixture_id', 'side', 'tournament', 'team', 'price', 'p_close', 'src', 'clv', 'won'])
 print(f'BOOK-EARLY LIVE (paper): {len(P)} picks ({P.arm.value_counts().to_dict()}), {len(R)} started, {R.clv.notna().sum() if len(R) else 0} with a close')
 for arm, g in (R.groupby('arm') if len(R) else []):
@@ -114,10 +115,11 @@ arms = {}
 for x in P.itertuples(): arms.setdefault((x.fixture_id, x.side), set()).add(ARM.get(x.arm, x.arm))
 out = sorted([dict(v, why=' + '.join(sorted(arms[k]))) for k, v in G.items()], key=lambda o: o['posted'], reverse=True)
 done = [o for o in out if o['clv'] is not None]
-summ = dict(asof=now.strftime('%Y-%m-%dT%H:%MZ'), picks=len(out), scored=len(done), clv_mean=round(float(np.mean([o['clv'] for o in done])), 4) if done else None,
-            clv_se=round(float(np.std([o['clv'] for o in done], ddof=1) / np.sqrt(len(done))), 4) if len(done) > 1 else None,
-            beat_close=round(float(np.mean([o['clv'] > 0 for o in done])), 3) if done else None,
-            settled=sum(o['result'] is not None for o in out), profit_units=round(sum((o['price'] - 1) if o['result'] == 'won' else -1 for o in out if o['result']), 2),
+_S = _C.summary([o['clv'] for o in done])
+summ = dict(asof=now.strftime('%Y-%m-%dT%H:%MZ'), picks=len(out), scored=len(done), clv_mean=round(float(_S['mean']), 4) if done else None,
+            clv_se=round(float(_S['se']), 4) if len(done) > 1 else None,
+            beat_close=round(float(_S['beat']), 3) if done else None,
+            settled=sum(o['result'] is not None for o in out), profit_units=round(_C.units([(o['price'], o['result'] == 'won') for o in out if o['result']]), 2),
             note='Paper picks, posted 12-48 h before the start. Closing-line value = our price x the fair price at the start (Pinnacle without margin, else Betfair) - 1. Verdict after 200 picks.')
 # 15 Nov (coordinator 12:45): COMMIT-REVEAL, off until the paid launch (flag file output/markets/live/commit_reveal.flag or EDGES_COMMIT_REVEAL=1).
 # On: a pick still to start is published only as {posted, competition, start, fingerprint}; fingerprint = sha256 of the pick's canonical

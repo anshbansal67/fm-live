@@ -39,6 +39,7 @@ jobs:
         run: |
           mkdir -p work/scratch/edge work/output/markets/live work/output/markets/odds/oa work/secrets
           cp edges/*.py work/scratch/edge/
+          cp -r fm_edges work/fm_edges
           if [ -f edges_seed/seed_id ] && ! cmp -s edges_seed/seed_id work/output/markets/live/seed_id; then cp edges_seed/early_picks.jsonl work/output/markets/live/early_picks.jsonl; cp edges_seed/seed_id work/output/markets/live/seed_id; echo "loaded the Mac's pick history (seed $(cat edges_seed/seed_id))"; fi
           echo "[$(date -u '+%Y-%m-%d %H:%M:%S')Z] snapshot: cloud run ${{ github.run_id }}" >> work/output/markets/live/actions.log
       - name: Prices and picks
@@ -89,6 +90,9 @@ jobs:
           if [ "$SHADOW" = "1" ]; then (cd work && FM_T="$PWD" FM_LIVE_DIR="$GITHUB_WORKSPACE" python scratch/edge/compare_shadow.py) || true; fi
           git add edges_cloud_heartbeat.json $(test -f shadow_compare.json && echo shadow_compare.json)
           git diff --cached --quiet || { git commit -q -m "edges heartbeat"; for i in 1 2 3; do git push -q && break || { git pull -q --rebase; sleep 5; }; done; }
+      - name: Backup (encrypted, once a day)
+        if: steps.keys.outputs.ok == '1'
+        run: 'test -f edges_backup_pub.pem && bash edges_backup_cloud.sh || echo "edges backup skipped"'
       - name: Save state
         if: always() && steps.keys.outputs.ok == '1'
         uses: actions/cache/save@v4

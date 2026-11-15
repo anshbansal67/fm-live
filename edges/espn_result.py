@@ -4,17 +4,8 @@ settlement isn't available (the GitHub Actions job; LAPTOP_PROOF.md). result(tea
   python3 espn_result.py "<team>" "<opp>" <start ISO> "<tournament>"      (a quick check)"""
 import os, re, sys, json, time, difflib, urllib.request, datetime as dt
 T = os.path.expanduser(os.environ.get('FM_T', '~/cricket-project/t20')); C = T + '/output/markets/live/espn_sb/'
-LEAGUE = {'ilt20': '20921', 'international league t20': '20921', 'big bash league': '8044', 'bbl': '8044', 'sa20': '21275', 'bangladesh premier league': '8653', 'bpl': '8653',
-          'super smash': '8654', 'nepal premier league': '23081', 'syed mushtaq ali trophy': '8661'}
+sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(os.path.abspath(__file__)), '..', '..'))); from fm_edges.mapping import LEAGUE, nm, same, league_of   # 15 Nov: name matching lives in fm_edges
 SB = 'https://site.api.espn.com/apis/site/v2/sports/cricket/{lg}/scoreboard?dates={d}'
-nm = lambda s: ' '.join(re.sub(r'[^a-z ]', ' ', re.sub(r'\(.*?\)', ' ', str(s).lower())).split())
-same = lambda a, b: nm(a) == nm(b) or nm(a) in nm(b) or nm(b) in nm(a) or difflib.SequenceMatcher(None, nm(a), nm(b)).ratio() >= 0.8
-def league_of(tournament):
-    t = ' '.join(re.sub(r'[^a-z0-9 ]', ' ', str(tournament).lower()).split())   # 15 Nov: keep digits ('ILT20', 'SA20' lost them in nm)
-    if re.search(r'\bwbbl\b|\bwomen|\bw\b', t): return None   # 15 Nov: WBBL / women's matched 'bbl' and searched the men's board (ESPN-RESULTS-CHECK)
-    for k, v in LEAGUE.items():
-        if k in t: return v
-    return None
 def board(lg, day):
     os.makedirs(C, exist_ok=True); f = C + f'{lg}_{day}.json'
     if os.path.exists(f) and time.time() - os.path.getmtime(f) < 1800: return json.load(open(f))

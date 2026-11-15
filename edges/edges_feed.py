@@ -3,7 +3,8 @@ In: output/markets/live/value_board.json (value_board.py), edges_players.json (l
 Out: edges_member.json = {board, players, teams} as they are; edges_free.json = the same with only what the free view shows:
 fair prices and chances, the number of UK prices above fair per match (not which book or by how much), each side's model win chance and
 median first-innings total, the top 3 batters (runs, 30+, 50+) and top 3 bowlers (wickets, 2+) per match.   python3 edges_feed.py"""
-import os, json
+import os, json, sys
+sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(os.path.abspath(__file__)), '..', '..'))); from fm_edges import feeds as _F   # 15 Nov: what the free view may show lives in fm_edges
 T = os.path.expanduser(os.environ.get('FM_T', '~/cricket-project/t20')); LV = T + '/output/markets/live/'
 ld = lambda f: json.load(open(LV + f)) if os.path.exists(LV + f) else None
 def free_board(b):
@@ -58,7 +59,7 @@ if __name__ == '__main__':
             k_ = e_.get('k')
             for sd in m.get('sides') or []:
                 if sd.get('win') is None: continue
-                sd['win'] = (round(0.5 + k_ * (sd['win'] - 0.5), 4) if k_ is not None else sd['win']) if shown else None
+                sd['win'] = _F.win_gate(sd['win'], shown, k_)
             if not shown:
                 m['win_note'] = m.get('win_note') or WS.get('too_close_text', 'too close to call on our numbers')   # lane 3's own note first
                 if m.get('preview'): m['preview'] = ' '.join(x for x in _re.split(r'(?<=[.!?])\s+', m['preview']) if '%' not in x)   # drop the win-chance sentence
@@ -66,7 +67,7 @@ if __name__ == '__main__':
     # started (with close and CLV as they arrive), plus only the NUMBER of picks still to start.
     pk = ld('picks_member.json') or ld('picks.json') or {}; P = pk.get('picks', [])   # 15 Nov: full picks (commit-reveal keeps picks.json's upcoming ones hidden)
     started = lambda x: dt.datetime.fromisoformat(str(x.get('start')).replace('Z', '+00:00')) <= now
-    pk_free = dict(summary=pk.get('summary'), picks=[x for x in P if started(x)], pending=sum(not started(x) for x in P))
+    pk_free = dict(summary=pk.get('summary'), **_F.free_picks(P, now))
     # 15 Nov (coordinator 14:25 item 5): lane 1's season ratings, free view: rank and net runs per side (model), win only where win_shown allows
     SR = ld('season_ratings.json') or {}; WS_ = ld('win_shown.json') or {}
     def _shown(pool): e_ = (WS_.get('leagues') or {}).get(pool, {}); return bool(e_.get('win_shown', WS_.get('default_shown', False)))

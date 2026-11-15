@@ -8,6 +8,8 @@ import os, sys, json, urllib.request, datetime as dt
 T = os.path.expanduser(os.environ.get('FM_T', '~/cricket-project/t20')); LV = T + '/output/markets/live/'
 BOOK = {'bet365': 'bet365', 'williamhill': 'William Hill', 'paddypower': 'Paddy Power', 'betfred': 'Betfred', 'unibet': 'Unibet', 'ladbrokes': 'Ladbrokes',
         'coral': 'Coral', 'betway': 'Betway', '888sport': '888sport', 'skybet': 'Sky Bet', 'betvictor': 'BetVictor', 'boylesports': 'BoyleSports'}
+LIVE = os.path.exists(T + '/secrets/pro_live.flag') or os.environ.get('PRO_LIVE') == '1'   # 15 Nov: its own switch, now that the toss poll calls it too
+if not LIVE and '--dry' not in sys.argv: print('pro alerts: off'); sys.exit(0)
 P = [json.loads(l) for l in open(LV + 'early_picks.jsonl')] if os.path.exists(LV + 'early_picks.jsonl') else []
 sf = LV + 'pro_alerted.json'; seen = set(json.load(open(sf))) if os.path.exists(sf) else set()
 now = dt.datetime.now(dt.timezone.utc); new = []; keys = []

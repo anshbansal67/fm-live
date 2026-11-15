@@ -28,14 +28,21 @@ jobs:
           key: edges-state-${{ github.run_id }}
           restore-keys: edges-state-
       - if: steps.keys.outputs.ok == '1'
-        run: mkdir -p work/scratch/edge && cp edges/*.py work/scratch/edge/
+        run: mkdir -p work/scratch/edge && cp edges/*.py work/scratch/edge/ && cp -r fm_edges work/fm_edges
       - name: Poll if a match starts within 40 min
         if: steps.keys.outputs.ok == '1'
         env:
           FM_T: '${{ github.workspace }}/work'
           FM_ACTIONS: '1'
           ODDSPAPI_KEY: '${{ secrets.ODDSPAPI_KEY }}'
-        run: cd work && python scratch/edge/early_picks.py --toss | tail -2
+          SHADOW: ${{ vars.EDGES_SHADOW || '1' }}
+          EDGES_COMMIT_REVEAL: '${{ vars.EDGES_COMMIT_REVEAL }}'
+          TELEGRAM_TOKEN: '${{ secrets.TELEGRAM_TOKEN }}'
+          TELEGRAM_CHAT: '${{ secrets.TELEGRAM_CHAT }}'
+          TG_LIVE: '${{ vars.TG_LIVE }}'
+          PRO_LIVE: '${{ vars.PRO_LIVE }}'
+          PRO_ALERT_SECRET: '${{ secrets.PRO_ALERT_SECRET }}'
+        run: cd work && python scratch/edge/early_picks.py --toss | tail -6   # 15 Nov: a toss pick's alerts go out from inside the poll (not shadow)
       - if: always() && steps.keys.outputs.ok == '1'
         uses: actions/cache/save@v4
         with:
