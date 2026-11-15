@@ -17,7 +17,7 @@ I = [dict(name='Arm B, T20 (the alert record)', lane=2, stage=3, what='UK price 
           n=len(t20), scored=n, clv=m, se=se, verdict_at=200, status='live paper: the record above'),
      dict(name='Arm B on BBL (the-odds-api)', lane=2, stage=3, what='the same rule on a second price source, from 12 Dec', n=len(bbl), scored=nb, clv=mb, se=seb,
           verdict_at=200, status='waiting for UK books to price BBL' if not bbl else 'live paper, inside the record above')]
-new3 = [p for p in t20 if any(w in (p.get('competition') or p.get('tournament') or '') for w in ('Indian Premier League', 'Pakistan Super League', 'T20I'))]
+new3 = [p for p in t20 if any(w in (p.get('competition') or p.get('tournament') or '') for w in ('Indian Premier League', 'Pakistan Super League', 'T20 internationals', 'T20I', 'IPL', 'PSL'))]
 n3, m3, se3 = stats(new3)
 I.append(dict(name='Arm B on the IPL, PSL and T20Is', lane=2, stage=3, what='the same rule on three more competitions (added 15 Nov; the backtest covered IPL and PSL); their picks count towards the 200',
               n=len(new3), scored=n3, clv=m3, se=se3, verdict_at=200, status='shadow until 30 Nov, then live paper inside the record above' if not new3 else 'live paper, inside the record above'))

@@ -8,8 +8,8 @@ import os, re, sys, json, pandas as pd
 T = os.path.expanduser(os.environ.get('FM_T', '~/cricket-project/t20')); LV = T + '/output/markets/live/'; OA = T + '/output/markets/odds/oa/'
 UK = {'bet365': 'bet365', 'williamhill': 'williamhill', 'paddypower': 'paddypower', 'betfred': 'betfred', 'unibet_uk': 'unibet', 'unibet': 'unibet',
       'ladbrokes_uk': 'ladbrokes', 'coral': 'coral', 'betway': 'betway', 'sport888': '888sport', 'skybet': 'skybet', 'betvictor': 'betvictor', 'boylesports': 'boylesports'}
-NAMES = {'cricket_big_bash': 'Big Bash League', 'cricket_international_t20': 'T20 internationals', 'cricket_t20_blast': 'T20 Blast', 'cricket_ipl': 'IPL',
-         'cricket_psl': 'PSL', 'cricket_caribbean_premier_league': 'CPL', 'cricket_the_hundred': 'The Hundred'}
+NAMES = {'cricket_big_bash': 'Big Bash League', 'cricket_international_t20': 'T20 internationals', 'cricket_t20_blast': 'T20 Blast', 'cricket_ipl': 'Indian Premier League',
+         'cricket_psl': 'Pakistan Super League', 'cricket_caribbean_premier_league': 'CPL', 'cricket_the_hundred': 'The Hundred'}
 NOT_T20 = {'cricket_odi', 'cricket_test_match', 'cricket_icc_world_cup', 'cricket_icc_world_cup_womens', 'cricket_icc_trophy', 'cricket_asia_cup'}
 nm = lambda s: ' '.join(re.sub(r'[^a-z ]', ' ', str(s).lower()).split())
 def picked():

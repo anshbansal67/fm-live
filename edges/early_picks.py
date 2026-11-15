@@ -57,7 +57,7 @@ def t20i_tourns(ok):
         if isinstance(d, list) and d: json.dump(d, open(f, 'w'))
     try: cat = json.load(open(f))
     except Exception: return {}
-    return {t['tournamentId']: 'T20I' for t in cat if t.get('categoryName') == 'International' and re.search(r'T20|Twenty20', t.get('tournamentName', ''))
+    return {t['tournamentId']: 'T20 internationals' for t in cat if t.get('categoryName') == 'International' and re.search(r'T20|Twenty20', t.get('tournamentName', ''))
             and not re.search(r'wom|\bA\b|\bU19\b', t.get('tournamentName', ''), re.I) and (t.get('futureFixtures') or t.get('upcomingFixtures'))}
 def fixtures(now):
     ok, used, lim = quota_ok(); out = []
