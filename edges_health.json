@@ -1,0 +1,47 @@
+{
+ "ts": "2026-11-15T17:20:07Z",
+ "source": "mac",
+ "overall": "FAIL",
+ "checks": {
+  "recorder loop": {
+   "state": "OK",
+   "why": "last loop 0 min ago"
+  },
+  "gaps over 30 min (24 h)": {
+   "state": "OK",
+   "why": "no gap over 30 min in the last 24 h"
+  },
+  "picks feed push": {
+   "state": "OK",
+   "why": "last push to fm-live 49 min ago"
+  },
+  "record push": {
+   "state": "OK",
+   "why": "last push to fm-live 5 min ago"
+  },
+  "OddsPapi": {
+   "state": "FAIL",
+   "why": "blocked: quota 251/250 (resets monthly)"
+  },
+  "the-odds-api": {
+   "state": "OK",
+   "why": "466 credits left"
+  },
+  "cloud run": {
+   "state": "OK",
+   "why": "no cloud heartbeat yet (not started)"
+  },
+  "TheRundown": {
+   "state": "OK",
+   "why": "key present"
+  },
+  "lane hooks": {
+   "state": "OK",
+   "why": "no failures in the last hour"
+  }
+ },
+ "gaps_24h": [],
+ "status": "FAIL",
+ "since": "2026-11-15T15:10:59Z",
+ "reason": "OddsPapi: blocked: quota 251/250 (resets monthly)"
+}

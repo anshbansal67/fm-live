@@ -1,0 +1,7 @@
+The best-rated batters in ILT20 2026 squads.
+
+The rating is the points of win chance a player adds per innings, against an average IPL batter, on one scale across every league he has played in. Finn Allen (Abu Dhabi Knight Riders) is ranked 5th of 1,074 rated batters.
+
+Every squad: fine-margins.com/t20/ilt20
+
+Data: Fine Margins T20 ratings, Cricsheet ball-by-ball; squads as listed for ILT20 2026.

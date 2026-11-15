@@ -1,0 +1,7 @@
+The 40 best-rated T20 batters still playing, placed by how they bat.
+
+Across: boundary power. Up: survival. These are two of the three axes of the model's style space, the same space that finds each player's nearest matches on his page.
+
+fine-margins.com/t20/rankings
+
+Data: Fine Margins T20 ratings, Cricsheet ball-by-ball.

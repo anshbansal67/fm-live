@@ -1,0 +1,102 @@
+# Fine Margins Edges: the record's must-never-stop steps, every 30 min (LAPTOP_PROOF.md; coordinator 12:30). Lives in fm-live (public repo:
+# unlimited Actions minutes). Built by lane 2; pushed 15 Nov on Ansh's yes, in shadow mode (publishes nothing) until the switch-over.
+# Secrets (Ansh pastes them: fm-live -> Settings -> Secrets and variables -> Actions -> New repository secret):
+#   ODDSPAPI_KEY, ODDSAPI_KEY                      required
+#   TELEGRAM_TOKEN, TELEGRAM_CHAT, PRO_ALERT_SECRET only when alerts are switched on (repository variables TG_LIVE=1 / PRO_LIVE=1)
+# State (snapshots, picks, caches) is kept in the Actions cache, which is private to this repo's workflows: nothing unpublished becomes public.
+name: Edges record
+on:
+  schedule: [ { cron: '7,37 * * * *' } ]
+  workflow_dispatch: {}
+concurrency: { group: edges-state, cancel-in-progress: false }
+permissions: { contents: write }
+env:
+  SHADOW: ${{ vars.EDGES_SHADOW || '1' }}          # 1 = build and score, publish nothing (23-29 Nov); set the repo variable to 0 on switch-over
+jobs:
+  record:
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    steps:
+      - uses: actions/checkout@v4
+      - name: Wait for the keys (Ansh pastes them as repository secrets)
+        id: keys
+        env: { K: '${{ secrets.ODDSPAPI_KEY }}' }
+        run: if [ -n "$K" ]; then echo "ok=1" >> "$GITHUB_OUTPUT"; else echo "ODDSPAPI_KEY not set yet; this run does nothing"; fi
+      - uses: actions/setup-python@v5
+        if: steps.keys.outputs.ok == '1'
+        with: { python-version: '3.12' }
+      - if: steps.keys.outputs.ok == '1'
+        run: pip install -q pandas numpy pyarrow
+      - name: Restore state
+        if: steps.keys.outputs.ok == '1'
+        uses: actions/cache/restore@v4
+        with:
+          path: work/output
+          key: edges-state-${{ github.run_id }}
+          restore-keys: edges-state-
+      - name: Lay out the work folder (same shape as cricket-project/t20)
+        if: steps.keys.outputs.ok == '1'
+        run: |
+          mkdir -p work/scratch/edge work/output/markets/live work/output/markets/odds/oa work/secrets
+          cp edges/*.py work/scratch/edge/
+          cp -r fm_edges work/fm_edges
+          if [ -f edges_seed/seed_id ] && ! cmp -s edges_seed/seed_id work/output/markets/live/seed_id; then cp edges_seed/early_picks.jsonl work/output/markets/live/early_picks.jsonl; cp edges_seed/seed_id work/output/markets/live/seed_id; echo "loaded the Mac's pick history (seed $(cat edges_seed/seed_id))"; fi
+          echo "[$(date -u '+%Y-%m-%d %H:%M:%S')Z] snapshot: cloud run ${{ github.run_id }}" >> work/output/markets/live/actions.log
+      - name: Prices and picks
+        if: steps.keys.outputs.ok == '1'
+        env:
+          FM_T: '${{ github.workspace }}/work'
+          FM_ACTIONS: '1'
+          EP_MIN_GAP_MIN: '55'
+          ODDSPAPI_KEY: '${{ secrets.ODDSPAPI_KEY }}'
+          ODDSAPI_KEY: '${{ secrets.ODDSAPI_KEY }}'
+        run: |
+          cd work
+          python scratch/edge/early_picks.py 2>&1 | tail -2 | sed "s/^/[$(date -u '+%Y-%m-%d %H:%M:%S')Z] early picks: /" | tee -a output/markets/live/actions.log
+          if [ "$SHADOW" != "1" ]; then python scratch/edge/oa_collect.py 2>&1 | tail -2 || true; fi   # the Mac takes the-odds-api snapshots during shadow: no double spend of the 500 credits
+          python scratch/edge/oa_picks.py 2>&1 | tail -2 || true
+      - name: Score, board, feeds, alerts, health
+        if: steps.keys.outputs.ok == '1'
+        env:
+          FM_T: '${{ github.workspace }}/work'
+          FM_ACTIONS: '1'
+          FM_LIVE_DIR: '${{ github.workspace }}'
+          EDGES_COMMIT_REVEAL: '${{ vars.EDGES_COMMIT_REVEAL }}'   # paid launch: 1 = members' picks hidden until the start (off while unset)
+          EDGES_PUBLISH_FREE: '${{ vars.EDGES_PUBLISH_FREE }}'     # 1 = also publish the free /edges feed (off while unset)
+          EDGES_KILL: '${{ vars.EDGES_KILL }}'   # 1 = stop every alert and every publish at once (kill switch)
+          ODDSPAPI_KEY: '${{ secrets.ODDSPAPI_KEY }}'
+          TELEGRAM_TOKEN: '${{ secrets.TELEGRAM_TOKEN }}'
+          TELEGRAM_CHAT: '${{ secrets.TELEGRAM_CHAT }}'
+          TG_LIVE: '${{ vars.TG_LIVE }}'
+          PRO_ALERT_SECRET: '${{ secrets.PRO_ALERT_SECRET }}'
+        run: |
+          cd work
+          git -C .. config user.name edges-bot; git -C .. config user.email edges-bot@users.noreply.github.com
+          python scratch/edge/edges_health.py | tail -1 || true      # before publishing, so this run's health goes out with the picks
+          if [ "$SHADOW" = "1" ]; then python scratch/edge/early_eval.py | tail -3; else python scratch/edge/early_eval.py --publish 2>&1 | tail -3 | sed "s/^/[$(date -u '+%Y-%m-%d %H:%M:%S')Z] picks feed: /" | tee -a output/markets/live/actions.log; fi
+          python scratch/edge/value_board.py | tail -1 || true
+          python scratch/edge/edges_feed.py | tail -1 || true
+          if [ "$SHADOW" != "1" ]; then python scratch/edge/tg_alerts.py | tail -1 || true; fi
+          if [ "$SHADOW" != "1" ] && [ "${{ vars.PRO_LIVE }}" = "1" ]; then python scratch/edge/pro_alerts.py | tail -1 || true; fi
+      - name: Heartbeat (public; time and status only)
+        if: steps.keys.outputs.ok == '1'
+        run: |
+          python - <<'PY'
+          import json, os
+          h = json.load(open('work/output/markets/live/edges_health_cloud.json')) if os.path.exists('work/output/markets/live/edges_health_cloud.json') else {}
+          json.dump(dict(ts=h.get('ts'), status=h.get('status', 'UNKNOWN'), since=h.get('since'), mode='shadow' if os.environ.get('SHADOW') == '1' else 'live',
+                         run=os.environ.get('GITHUB_RUN_ID')), open('edges_cloud_heartbeat.json', 'w'))
+          PY
+          git config user.name edges-bot; git config user.email edges-bot@users.noreply.github.com
+          if [ "$SHADOW" = "1" ]; then (cd work && FM_T="$PWD" FM_LIVE_DIR="$GITHUB_WORKSPACE" python scratch/edge/compare_shadow.py) || true; fi
+          git add edges_cloud_heartbeat.json $(test -f shadow_compare.json && echo shadow_compare.json)
+          git diff --cached --quiet || { git commit -q -m "edges heartbeat"; for i in 1 2 3; do git push -q && break || { git pull -q --rebase; sleep 5; }; done; }
+      - name: Backup (encrypted, once a day)
+        if: steps.keys.outputs.ok == '1'
+        run: 'test -f edges_backup_pub.pem && bash edges_backup_cloud.sh || echo "edges backup skipped"'
+      - name: Save state
+        if: always() && steps.keys.outputs.ok == '1'
+        uses: actions/cache/save@v4
+        with:
+          path: work/output
+          key: edges-state-${{ github.run_id }}

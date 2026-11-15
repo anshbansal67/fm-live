@@ -1,0 +1,81 @@
+{
+ "asof": "2026-11-15T17:20Z",
+ "stages": {
+  "1": "Idea",
+  "2": "Registered test on past prices",
+  "3": "Live paper, in public",
+  "4": "Proven: 200+ live picks beating the close by 2 SE"
+ },
+ "note": "Only stage 4 goes into members' alerts. Nothing is proven yet.",
+ "ideas": [
+  {
+   "name": "Arm B, T20 (the alert record)",
+   "lane": 2,
+   "stage": 3,
+   "what": "UK price at least 3% over Pinnacle's fair price, 12-48 h before, or at the toss",
+   "n": 0,
+   "scored": 0,
+   "clv": null,
+   "se": null,
+   "verdict_at": 200,
+   "status": "live paper: the record above"
+  },
+  {
+   "name": "Arm B on BBL (the-odds-api)",
+   "lane": 2,
+   "stage": 3,
+   "what": "the same rule on a second price source, from 12 Dec",
+   "n": 0,
+   "scored": 0,
+   "clv": null,
+   "se": null,
+   "verdict_at": 200,
+   "status": "waiting for UK books to price BBL"
+  },
+  {
+   "name": "Arm B on ODIs (the-odds-api)",
+   "lane": 3,
+   "stage": 3,
+   "what": "the same rule on one-day internationals",
+   "n": 0,
+   "scored": 0,
+   "clv": null,
+   "se": null,
+   "verdict_at": 100,
+   "status": "live paper, its own count"
+  },
+  {
+   "name": "Arm B with the gap capped at 10%",
+   "lane": 2,
+   "stage": 2,
+   "what": "the same rule, but only gaps between 3% and 10% (where bets are unlikely to be voided)",
+   "n": null,
+   "clv": null,
+   "se": null,
+   "verdict_at": 60,
+   "status": "registered 15 Nov; runs once on December prices"
+  },
+  {
+   "name": "Stale UK prices after the toss",
+   "lane": 2,
+   "stage": 2,
+   "what": "UK books that haven't moved when Pinnacle has, in the last 30 min",
+   "n": 16,
+   "clv": 0.0693,
+   "se": 0.0206,
+   "verdict_at": 60,
+   "status": "failed its registered test on 15 Nov (16 bets, 60 needed): stays dead"
+  },
+  {
+   "name": "First UK quote v Pinnacle",
+   "lane": 2,
+   "stage": 2,
+   "what": "a UK book's first price on a fixture against Pinnacle's fair price at that moment",
+   "n": null,
+   "clv": null,
+   "se": null,
+   "verdict_at": 100,
+   "status": "registered 15 Nov; runs once on December prices (new data only)"
+  }
+ ]
+}

@@ -1,0 +1,10 @@
+Player A or Player B?
+
+Two T20 batters on one scale with their names hidden. The next slide says who they are.
+
+Fine Margins rates Heinrich Klaasen +3.24 and Priyansh Arya +3.21: points of win chance per innings against an average IPL batter. The rest is in IPL numbers: each player run through today's IPL against average opposition. IPL pay for 2027 as it stands: Heinrich Klaasen ₹23 crore (SRH), Priyansh Arya ₹3.8 crore (PBKS).
+
+fine-margins.com/t20/player/heinrich-klaasen
+fine-margins.com/t20/player/priyansh-arya
+
+Data: Fine Margins T20 ratings, Cricsheet ball-by-ball.

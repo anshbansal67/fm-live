@@ -1,0 +1,20 @@
+# Edges tests: runs fm_edges' tests on every push that touches the Edges package, so a broken change shows red before it runs live.
+name: Edges tests
+on:
+  push:
+    paths: ['edges/**', 'fm_edges/**', '.github/workflows/edges*.yml']
+  workflow_dispatch: {}
+permissions: { contents: read }
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with: { python-version: '3.12' }
+      - run: pip install -q pytest pandas numpy
+      - name: Unit tests
+        run: python -m pytest -q fm_edges/tests
+      - name: Every script compiles
+        run: python -m py_compile edges/*.py
