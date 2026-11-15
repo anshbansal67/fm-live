@@ -1,5 +1,5 @@
 {
- "asof": "2026-11-15T17:20Z",
+ "asof": "2026-11-15T18:24Z",
  "stages": {
   "1": "Idea",
   "2": "Registered test on past prices",
@@ -31,6 +31,18 @@
    "se": null,
    "verdict_at": 200,
    "status": "waiting for UK books to price BBL"
+  },
+  {
+   "name": "Arm B on the IPL, PSL and T20Is",
+   "lane": 2,
+   "stage": 3,
+   "what": "the same rule on three more competitions (added 15 Nov; the backtest covered IPL and PSL); their picks count towards the 200",
+   "n": 0,
+   "scored": 0,
+   "clv": null,
+   "se": null,
+   "verdict_at": 200,
+   "status": "shadow until 30 Nov, then live paper inside the record above"
   },
   {
    "name": "Arm B on ODIs (the-odds-api)",
