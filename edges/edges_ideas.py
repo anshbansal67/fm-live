@@ -21,6 +21,8 @@ o = ld('lane3_odi_record.json')
 if o: I.append(dict(name='Arm B on ODIs (the-odds-api)', lane=3, stage=3, what='the same rule on one-day internationals', n=o.get('n_picks'), scored=o.get('n_scored'),
                     clv=o.get('clv_mean'), se=o.get('clv_se'), verdict_at=o.get('verdict_at'), status='live paper, its own count'))
 # lane 2's finished tests (fixed text, so the Mac and the cloud publish the same list)
+I.append(dict(name='Arm B with the gap capped at 10%', lane=2, stage=2, what='the same rule, but only gaps between 3% and 10% (where bets are unlikely to be voided)',
+              n=None, clv=None, se=None, verdict_at=60, status='registered 15 Nov; runs once on December prices'))
 I.append(dict(name='Stale UK prices after the toss', lane=2, stage=2, what='UK books that haven\'t moved when Pinnacle has, in the last 30 min',
               n=16, clv=0.0693, se=0.0206, verdict_at=60, status='failed its registered test on 15 Nov (16 bets, 60 needed): stays dead'))
 I.append(dict(name='First UK quote v Pinnacle', lane=2, stage=2, what='a UK book\'s first price on a fixture against Pinnacle\'s fair price at that moment',
