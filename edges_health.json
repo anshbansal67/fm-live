@@ -1,7 +1,7 @@
 {
- "ts": "2026-11-15T18:24:04Z",
+ "ts": "2026-11-15T19:28:14Z",
  "source": "mac",
- "overall": "FAIL",
+ "overall": "WARN",
  "checks": {
   "recorder loop": {
    "state": "OK",
@@ -17,11 +17,11 @@
   },
   "record push": {
    "state": "OK",
-   "why": "last push to fm-live 25 min ago"
+   "why": "last push to fm-live 20 min ago"
   },
   "OddsPapi": {
-   "state": "FAIL",
-   "why": "blocked: quota 251/250 (resets monthly)"
+   "state": "WARN",
+   "why": "no early-picks run found"
   },
   "the-odds-api": {
    "state": "OK",
@@ -29,7 +29,7 @@
   },
   "cloud run": {
    "state": "OK",
-   "why": "last cloud run 34 min ago (shadow, FAIL)"
+   "why": "last cloud run 98 min ago (shadow, FAIL)"
   },
   "TheRundown": {
    "state": "OK",
@@ -41,7 +41,7 @@
   }
  },
  "gaps_24h": [],
- "status": "FAIL",
- "since": "2026-11-15T15:10:59Z",
- "reason": "OddsPapi: blocked: quota 251/250 (resets monthly)"
+ "status": "WARN",
+ "since": "2026-11-15T18:29:01Z",
+ "reason": "OddsPapi: no early-picks run found"
 }
