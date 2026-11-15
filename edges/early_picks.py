@@ -4,7 +4,7 @@ QUOTA: OddsPapi free = 250 metered requests a month. Prices come ONLY from /v4/h
 fixture lists are metered, so they are cached per tournament and refreshed at most every 3 days, and never when /v4/account (unmetered) shows
 request_count >= request_limit - 25.
   python3 early_picks.py            hourly sweep: fixtures 1-48 h out -> snapshot (early_odds.jsonl); B picks 12-48 h out (arm 'B')
-  python3 early_picks.py --toss     toss window: fixtures starting within 35 min, polled every 3 min until the start (arm 'BT')
+  python3 early_picks.py --toss     toss window: fixtures starting within 35 min, polled every 60 s (EP_TOSS_POLL_S) until the start (arm 'BT')
   python3 early_picks.py --dry      no writes"""
 import os, re, sys, json, time, urllib.request, urllib.parse, numpy as np, pandas as pd
 T = os.path.expanduser(os.environ.get('FM_T', '~/cricket-project/t20')); LV = T + '/output/markets/live/'; OD = T + '/output/markets/odds/'
@@ -123,7 +123,8 @@ if __name__ == '__main__':
         print(f'early_picks: blocked, OddsPapi quota {used}/{lim} (all endpoints 429 until it resets); {len(fx)} fixtures cached, 0 priced', flush=True); sys.exit(0)
     if '--toss' in sys.argv:   # poll every 3 min while any fixture is in its last 35 min
         n = 0
-        for k in range(14):
+        POLL = int(os.environ.get('EP_TOSS_POLL_S', '60'))   # 15 Nov (coordinator 15:40 item 15): 60 s sweeps (was 180) so detection lag is under a minute
+        for k in range(int(36 * 60 / POLL) + 1):
             now = pd.Timestamp.now(tz='UTC'); live = [x for x in fx if 0 < (pd.Timestamp(x['startTime']) - now).total_seconds() / 60 <= 35]
             if not live: break
             sz_ = os.path.getsize(LV + 'early_picks.jsonl') if os.path.exists(LV + 'early_picks.jsonl') else 0
@@ -143,7 +144,7 @@ if __name__ == '__main__':
                         r_ = __import__('subprocess').run([sys.executable, os.path.join(os.path.dirname(os.path.abspath(__file__)), a_)], capture_output=True, text=True, timeout=60)
                         print(f'toss alert ({a_}):', (r_.stdout or r_.stderr).strip()[-120:], flush=True)
                     except Exception as x: print('toss alert error', a_, type(x).__name__, flush=True)
-            time.sleep(max(0, 180 - (pd.Timestamp.now(tz='UTC') - now).total_seconds()))
+            time.sleep(max(0, POLL - (pd.Timestamp.now(tz='UTC') - now).total_seconds()))
         print(f'early_picks --toss: {n} price sweeps; errors {ERR or 0}', flush=True)
     else:
         n = sweep(fx, now, 1, 48, 'B', dry, seen)

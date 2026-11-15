@@ -67,3 +67,16 @@ def test_kill_switch(tmp_path, monkeypatch):
     assert switch.killed(str(tmp_path))
     with pytest.raises(SystemExit): switch.stop_if_killed('x', str(tmp_path))
     (tmp_path / 'output/markets/live/EDGES_KILL').unlink(); monkeypatch.setenv('EDGES_KILL', '1'); assert switch.killed(str(tmp_path))
+
+@pytest.mark.parametrize('outcome,team,res', [
+    ({'winner': 'A', 'by': {'runs': 10}}, 'A', 'won'), ({'winner': 'B', 'by': {'wickets': 3}}, 'A', 'lost'),
+    ({'winner': 'A', 'by': {'runs': 4}, 'method': 'D/L'}, 'A', 'won'),                    # DLS: the official winner
+    ({'result': 'tie', 'eliminator': 'B'}, 'A', 'lost'), ({'result': 'tie', 'eliminator': 'A'}, 'A', 'won'),   # super over
+    ({'result': 'tie'}, 'A', 'dead heat'), ({'result': 'no result'}, 'A', 'void'), ({}, 'A', 'void')])
+def test_settle(outcome, team, res):
+    from fm_edges import settle
+    assert settle.from_cricsheet(outcome, team) == res
+def test_settle_units():
+    from fm_edges import settle
+    assert settle.units(2.2, 'won') == pytest.approx(1.2) and settle.units(2.2, 'lost') == -1 and settle.units(2.2, 'void') == 0
+    assert settle.units(2.2, 'dead heat') == pytest.approx(0.1)

@@ -42,6 +42,10 @@ if not ACTIONS:
     else: C['cloud run'] = ('OK', 'no cloud heartbeat yet (not started)')
 C['TheRundown'] = ('OK', 'key present') if rk_ok else ('OK', 'no key yet (collector idle)')
 C['lane hooks'] = ('WARN', f'{len(hook_fail)} failures in the last hour: ' + '; '.join(hook_fail[-2:])) if hook_fail else ('OK', 'no failures in the last hour')
+# 15 Nov (item 17): a refused publish (the record would have shrunk) is red until a good publish clears it
+if os.path.exists(LV + 'publish_blocked.json'):
+    try: pb = json.load(open(LV + 'publish_blocked.json')); C['picks shrink guard'] = ('FAIL', f"publish refused at {pb.get('ts')}: picks {pb.get('public')} -> {pb.get('new')}; restore the history")
+    except Exception: C['picks shrink guard'] = ('FAIL', 'publish refused (picks would shrink)')
 import sys; sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(os.path.abspath(__file__)), '..', '..'))); from fm_edges import health as _H   # 15 Nov: status logic lives in fm_edges
 ov = _H.overall(C)
 J = dict(ts=now.strftime('%Y-%m-%dT%H:%M:%SZ'), source='cloud' if ACTIONS else 'mac', overall=ov, checks={k: dict(state=a, why=b) for k, (a, b) in C.items()},

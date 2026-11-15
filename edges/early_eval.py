@@ -142,7 +142,15 @@ def public(o):
 J = dict(summary=dict(summ, commit_reveal=CR), picks=[public(o) for o in out]); open(LV + 'picks.json', 'w').write(json.dumps(J, separators=(',', ':')))
 open(LV + 'picks_member.json', 'w').write(json.dumps(dict(summary=summ, picks=out), separators=(',', ':')))   # full, for the members' feed (never published)
 if '--publish' in sys.argv:
-    asof_ = summ['asof']; Rp = os.path.expanduser(os.environ.get('FM_LIVE_DIR', '~/fm-live')); open(os.path.join(Rp, 'picks.json'), 'w').write(json.dumps(J, separators=(',', ':')))
+    asof_ = summ['asof']; Rp = os.path.expanduser(os.environ.get('FM_LIVE_DIR', '~/fm-live'))
+    # 15 Nov (item 17): never publish a record with fewer picks than the public one (a wiped cache or a lost file). Restore first.
+    try: old_n = len(json.load(open(os.path.join(Rp, 'picks.json'))).get('picks', []))
+    except Exception: old_n = 0
+    if len(J['picks']) < old_n:
+        json.dump(dict(ts=now.strftime('%Y-%m-%dT%H:%MZ'), public=old_n, new=len(J['picks'])), open(LV + 'publish_blocked.json', 'w'))
+        print(f'picks feed: NOT published: picks would shrink from {old_n} to {len(J["picks"])} (restore the history first)'); sys.exit(0)
+    if os.path.exists(LV + 'publish_blocked.json'): os.replace(LV + 'publish_blocked.json', LV + 'publish_blocked.cleared.json')
+    open(os.path.join(Rp, 'picks.json'), 'w').write(json.dumps(J, separators=(',', ':')))
     HFN = 'edges_health_cloud.json' if ACTIONS else 'edges_health.json'   # 15 Nov: for Ansh HQ via hub.py (cloud and Mac each publish their own)
     if os.path.exists(LV + HFN) and os.path.abspath(LV + HFN) != os.path.abspath(os.path.join(Rp, HFN)): open(os.path.join(Rp, HFN), 'w').write(open(LV + HFN).read())
     # 15 Nov (INTEGRATION.md): the free /edges feed goes to fm-live only once switched on (edges_free_publish.flag on the Mac, or
