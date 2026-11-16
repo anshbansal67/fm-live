@@ -1,5 +1,5 @@
 {
- "ts": "2026-11-16T05:03:33Z",
+ "ts": "2026-11-16T06:07:29Z",
  "source": "mac",
  "overall": "WARN",
  "checks": {
@@ -29,7 +29,7 @@
   },
   "cloud run": {
    "state": "OK",
-   "why": "last cloud run 26 min ago (shadow, FAIL)"
+   "why": "last cloud run 30 min ago (shadow, FAIL)"
   },
   "TheRundown": {
    "state": "OK",
