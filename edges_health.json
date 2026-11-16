@@ -1,5 +1,5 @@
 {
- "ts": "2026-11-16T02:55:39Z",
+ "ts": "2026-11-16T03:59:36Z",
  "source": "mac",
  "overall": "WARN",
  "checks": {
@@ -17,7 +17,7 @@
   },
   "record push": {
    "state": "OK",
-   "why": "last push to fm-live 20 min ago"
+   "why": "last push to fm-live 15 min ago"
   },
   "OddsPapi": {
    "state": "WARN",
@@ -29,7 +29,7 @@
   },
   "cloud run": {
    "state": "OK",
-   "why": "last cloud run 18 min ago (shadow, FAIL)"
+   "why": "last cloud run 22 min ago (shadow, FAIL)"
   },
   "TheRundown": {
    "state": "OK",
