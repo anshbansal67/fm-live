@@ -5,3 +5,5 @@ The rating is the points of win chance a player adds per innings, against an ave
 Every squad: fine-margins.com/t20/ilt20
 
 Data: Fine Margins T20 ratings, Cricsheet ball-by-ball; squads as listed for ILT20 2026.
+
+#ILT20 #CricketStats #FineMargins

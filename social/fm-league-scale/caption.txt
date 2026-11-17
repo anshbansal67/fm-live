@@ -7,3 +7,5 @@ The scale comes from the players the competitions share: when the same batter pl
 The full map: fine-margins.com/t20/competitions
 
 Data: Fine Margins T20 ratings, Cricsheet ball-by-ball.
+
+#CricketStats #FineMargins

@@ -5,3 +5,5 @@ The rating is the points of win chance a player adds per innings, against an ave
 Every squad: fine-margins.com/t20/bbl
 
 Data: Fine Margins T20 ratings, Cricsheet ball-by-ball; squads as listed for BBL 2026-27.
+
+#BBL16 #CricketStats #FineMargins
