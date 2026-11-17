@@ -1,0 +1,26 @@
+{
+ "kind": "review",
+ "slug": "test-pick-ep1",
+ "made": "2026-11-17T20:10:03Z",
+ "title": "Myths episode 1: pick a script",
+ "items": [
+  {
+   "key": "a",
+   "title": "POV: auction day",
+   "text": "POV: IPL auction day.\nYou've got twenty-seven crore and the biggest paddle.\nYour analyst waves a spreadsheet.\nYou wave back.\nSold! Confetti!\nExcept.\nSince 2018, the three dearest buys each year: twenty-six played.\nSeven beat an average player.\nEveryone else? Nearly four in ten.\nThe two big hits were both captains.\nTurns out most of that price was hype.\nNext year, give the analyst the paddle.",
+   "audio": "a.m4a"
+  },
+  {
+   "key": "b",
+   "title": "I spent ₹27 crore on one player",
+   "text": "I spent twenty-seven crore on one cricketer.\nMy analyst tried to stop me.\nI thought he was waving hello.\nThe room went mad. Then someone checked.\nSince 2018, the three dearest buys each year: twenty-six played.\nSeven beat an average player.\nSeven.\nThe two that worked? Both wore the armband.\nTurns out you mostly pay for the hype.\nMy analyst's got the paddle now.\nHe's bidding base price.",
+   "audio": "b.m4a"
+  },
+  {
+   "key": "c",
+   "title": "The star or the bargain bin?",
+   "text": "Would you rather have the IPL auction's most expensive player, or three cheap ones?\nCareful.\nSince 2018, the three dearest buys each year: twenty-six played.\nOnly seven beat an average player.\nEveryone else bought? Nearly four in ten did.\nThe two big hits were both captains.\nBig prices mostly buy hype.\nSo. The star, or the bargain bin?\nYour analyst already knows.\nTell us in the comments.",
+   "audio": "c.m4a"
+  }
+ ]
+}
