@@ -1,5 +1,5 @@
 {
- "ts": "2026-11-18T09:36:59Z",
+ "ts": "2026-11-18T10:40:52Z",
  "source": "mac",
  "overall": "WARN",
  "checks": {
@@ -13,11 +13,11 @@
   },
   "picks feed push": {
    "state": "OK",
-   "why": "last push to fm-live 27 min ago"
+   "why": "last push to fm-live 62 min ago"
   },
   "record push": {
    "state": "OK",
-   "why": "last push to fm-live 28 min ago"
+   "why": "last push to fm-live 25 min ago"
   },
   "OddsPapi": {
    "state": "WARN",
@@ -29,19 +29,19 @@
   },
   "cloud run": {
    "state": "OK",
-   "why": "last cloud run 30 min ago (shadow, FAIL)"
+   "why": "last cloud run 34 min ago (shadow, FAIL)"
   },
   "TheRundown": {
    "state": "OK",
    "why": "key present"
   },
   "lane hooks": {
-   "state": "WARN",
-   "why": "4 failures in the last hour:  oa_odi_eval.py failed:     ~~~~^^^^^^^^^^^^^^^^^^^^^;  edges_teams.py failed: w') as fh:"
+   "state": "OK",
+   "why": "no failures in the last hour"
   }
  },
  "gaps_24h": [],
  "status": "WARN",
  "since": "2026-11-15T22:35:09Z",
- "reason": "OddsPapi: no early-picks run found; lane hooks: 4 failures in the last hour:  oa_odi_eval.py failed:     ~~~~^^^^^^^^^^^^^^^^^^^^^;  edges_teams.py failed: w') as fh:"
+ "reason": "OddsPapi: no early-picks run found"
 }
