@@ -1,23 +1,23 @@
 {
- "ts": "2026-11-18T15:48:06Z",
+ "ts": "2026-11-18T17:14:48Z",
  "source": "mac",
  "overall": "WARN",
  "checks": {
   "recorder loop": {
-   "state": "WARN",
-   "why": "last loop 14 min ago"
+   "state": "OK",
+   "why": "last loop 0 min ago"
   },
   "gaps over 30 min (24 h)": {
-   "state": "OK",
-   "why": "no gap over 30 min in the last 24 h"
+   "state": "WARN",
+   "why": "1 gap(s): 18 Nov 15:33-16:38 UTC (65 min)"
   },
   "picks feed push": {
    "state": "OK",
-   "why": "last push to fm-live 54 min ago"
+   "why": "last push to fm-live 55 min ago"
   },
   "record push": {
    "state": "OK",
-   "why": "last push to fm-live 30 min ago"
+   "why": "last push to fm-live 4 min ago"
   },
   "OddsPapi": {
    "state": "WARN",
@@ -29,7 +29,7 @@
   },
   "cloud run": {
    "state": "OK",
-   "why": "last cloud run 41 min ago (shadow, FAIL)"
+   "why": "last cloud run 7 min ago (shadow, WARN)"
   },
   "TheRundown": {
    "state": "OK",
@@ -40,8 +40,14 @@
    "why": "no failures in the last hour"
   }
  },
- "gaps_24h": [],
+ "gaps_24h": [
+  {
+   "start": "2026-11-18T15:33Z",
+   "end": "2026-11-18T16:38Z",
+   "minutes": 65
+  }
+ ],
  "status": "WARN",
  "since": "2026-11-15T22:35:09Z",
- "reason": "recorder loop: last loop 14 min ago; OddsPapi: no early-picks run found"
+ "reason": "gaps over 30 min (24 h): 1 gap(s): 18 Nov 15:33-16:38 UTC (65 min); OddsPapi: no early-picks run found"
 }
