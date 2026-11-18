@@ -1,5 +1,5 @@
 {
- "ts": "2026-11-18T02:48:44Z",
+ "ts": "2026-11-18T03:52:31Z",
  "source": "mac",
  "overall": "WARN",
  "checks": {
@@ -25,11 +25,11 @@
   },
   "the-odds-api": {
    "state": "OK",
-   "why": "457 credits left"
+   "why": "453 credits left"
   },
   "cloud run": {
    "state": "OK",
-   "why": "last cloud run 12 min ago (shadow, FAIL)"
+   "why": "last cloud run 15 min ago (shadow, FAIL)"
   },
   "TheRundown": {
    "state": "OK",
