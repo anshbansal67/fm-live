@@ -1,23 +1,23 @@
 {
- "ts": "2026-11-18T19:22:38Z",
+ "ts": "2026-11-19T00:00:31Z",
  "source": "mac",
- "overall": "WARN",
+ "overall": "FAIL",
  "checks": {
   "recorder loop": {
-   "state": "OK",
-   "why": "last loop 0 min ago"
+   "state": "FAIL",
+   "why": "last loop 107 min ago"
   },
   "gaps over 30 min (24 h)": {
-   "state": "WARN",
-   "why": "1 gap(s): 18 Nov 15:33-16:38 UTC (65 min)"
+   "state": "FAIL",
+   "why": "3 gap(s): 18 Nov 15:33-16:38 UTC (65 min); 18 Nov 19:56-22:13 UTC (136 min); 18 Nov 22:13-00:00 UTC (107 min)"
   },
   "picks feed push": {
-   "state": "OK",
-   "why": "last push to fm-live 63 min ago"
+   "state": "WARN",
+   "why": "last push to fm-live 277 min ago"
   },
   "record push": {
    "state": "OK",
-   "why": "last push to fm-live 30 min ago"
+   "why": "last push to fm-live 61 min ago"
   },
   "OddsPapi": {
    "state": "WARN",
@@ -28,8 +28,8 @@
    "why": "453 credits left"
   },
   "cloud run": {
-   "state": "OK",
-   "why": "last cloud run 45 min ago (shadow, FAIL)"
+   "state": "FAIL",
+   "why": "last cloud run 83 min ago (shadow, FAIL)"
   },
   "TheRundown": {
    "state": "OK",
@@ -45,9 +45,19 @@
    "start": "2026-11-18T15:33Z",
    "end": "2026-11-18T16:38Z",
    "minutes": 65
+  },
+  {
+   "start": "2026-11-18T19:56Z",
+   "end": "2026-11-18T22:13Z",
+   "minutes": 136
+  },
+  {
+   "start": "2026-11-18T22:13Z",
+   "end": "2026-11-19T00:00Z",
+   "minutes": 107
   }
  ],
- "status": "WARN",
- "since": "2026-11-15T22:35:09Z",
- "reason": "gaps over 30 min (24 h): 1 gap(s): 18 Nov 15:33-16:38 UTC (65 min); OddsPapi: no early-picks run found"
+ "status": "FAIL",
+ "since": "2026-11-19T00:00:31Z",
+ "reason": "recorder loop: last loop 107 min ago; gaps over 30 min (24 h): 3 gap(s): 18 Nov 15:33-16:38 UTC (65 min); 18 Nov 19:56-22:13 UTC (136 min); 18 Nov 22:13-00:00 UTC (107 min); cloud run: last cloud run 83 min ago (shadow, FAIL)"
 }
