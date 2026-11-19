@@ -1,23 +1,23 @@
 {
- "ts": "2026-11-19T00:00:31Z",
+ "ts": "2026-11-19T19:44:26Z",
  "source": "mac",
  "overall": "FAIL",
  "checks": {
   "recorder loop": {
    "state": "FAIL",
-   "why": "last loop 107 min ago"
+   "why": "last loop 419 min ago"
   },
   "gaps over 30 min (24 h)": {
    "state": "FAIL",
-   "why": "3 gap(s): 18 Nov 15:33-16:38 UTC (65 min); 18 Nov 19:56-22:13 UTC (136 min); 18 Nov 22:13-00:00 UTC (107 min)"
+   "why": "3 gap(s): 18 Nov 19:56-22:13 UTC (136 min); 18 Nov 22:13-12:45 UTC (872 min); 19 Nov 12:45-19:44 UTC (419 min)"
   },
   "picks feed push": {
    "state": "WARN",
-   "why": "last push to fm-live 277 min ago"
+   "why": "last push to fm-live 840 min ago"
   },
   "record push": {
    "state": "OK",
-   "why": "last push to fm-live 61 min ago"
+   "why": "last push to fm-live 14 min ago"
   },
   "OddsPapi": {
    "state": "WARN",
@@ -28,8 +28,8 @@
    "why": "453 credits left"
   },
   "cloud run": {
-   "state": "FAIL",
-   "why": "last cloud run 83 min ago (shadow, FAIL)"
+   "state": "OK",
+   "why": "last cloud run 37 min ago (shadow, FAIL)"
   },
   "TheRundown": {
    "state": "OK",
@@ -42,22 +42,22 @@
  },
  "gaps_24h": [
   {
-   "start": "2026-11-18T15:33Z",
-   "end": "2026-11-18T16:38Z",
-   "minutes": 65
-  },
-  {
    "start": "2026-11-18T19:56Z",
    "end": "2026-11-18T22:13Z",
    "minutes": 136
   },
   {
    "start": "2026-11-18T22:13Z",
-   "end": "2026-11-19T00:00Z",
-   "minutes": 107
+   "end": "2026-11-19T12:45Z",
+   "minutes": 872
+  },
+  {
+   "start": "2026-11-19T12:45Z",
+   "end": "2026-11-19T19:44Z",
+   "minutes": 419
   }
  ],
  "status": "FAIL",
  "since": "2026-11-19T00:00:31Z",
- "reason": "recorder loop: last loop 107 min ago; gaps over 30 min (24 h): 3 gap(s): 18 Nov 15:33-16:38 UTC (65 min); 18 Nov 19:56-22:13 UTC (136 min); 18 Nov 22:13-00:00 UTC (107 min); cloud run: last cloud run 83 min ago (shadow, FAIL)"
+ "reason": "recorder loop: last loop 419 min ago; gaps over 30 min (24 h): 3 gap(s): 18 Nov 19:56-22:13 UTC (136 min); 18 Nov 22:13-12:45 UTC (872 min); 19 Nov 12:45-19:44 UTC (419 min)"
 }
