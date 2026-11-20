@@ -1,0 +1,33 @@
+name: FM match-day toss (cloud)
+
+# 20 Nov 2026: the Edges toss path for when the Mac is asleep. Every 10 minutes it checks whether an Edges match is near its toss with
+# no team sheet yet; if so it runs the toss watch and, on the named XIs, the cards and the members' data. The code and the data come
+# from the private cricket-project repo (branch matchday-state, pushed by the Mac) at run time: nothing private is stored here.
+# Needs the FM_PRIVATE_PAT secret: a fine-grained token for anshbansal67/cricket-project, Contents read and write.
+on:
+  schedule: [{ cron: '*/10 * * * *' }]
+  workflow_dispatch:
+    inputs:
+      event: { description: 'ESPN event id: run the toss path for this match now (a test)', required: false, default: '' }
+
+concurrency: { group: matchday-toss, cancel-in-progress: false }
+permissions: { contents: write }
+
+jobs:
+  toss:
+    runs-on: ubuntu-latest
+    timeout-minutes: 80
+    steps:
+      - uses: actions/setup-python@v5
+        with: { python-version: '3.13' }
+      - name: Bundle
+        env: { PAT: '${{ secrets.FM_PRIVATE_PAT }}' }
+        run: |
+          if [ -z "$PAT" ]; then echo "FM_PRIVATE_PAT is not set yet"; exit 0; fi
+          git clone -q --depth 1 -b matchday-state "https://x-access-token:${PAT}@github.com/anshbansal67/cricket-project.git" /tmp/mds
+          mkdir -p ~/cricket-project && zstd -dc /tmp/mds/fresh.tar.zst | tar -x -C ~/cricket-project
+      - name: Toss
+        env: { PAT: '${{ secrets.FM_PRIVATE_PAT }}', GITHUB_TOKEN: '${{ github.token }}', FORCE_EVENT: '${{ inputs.event }}' }
+        run: |
+          [ -n "$PAT" ] || exit 0
+          bash ~/cricket-project/t20/scratch/cloudtoss/cloud_run.sh
