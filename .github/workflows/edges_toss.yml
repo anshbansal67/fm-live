@@ -24,6 +24,9 @@ jobs:
           nxt = min((s for s in slots if s >= m), default=slots[0] + 60)
           wait = max(0, (nxt - m) * 60); print(f"waiting {wait/60:.1f} min for the :{nxt % 60:02d} slot", flush=True); time.sleep(min(wait, 31 * 60))
           PY
+      - name: "Start the match-day toss check (20 Nov: GitHub's own cron for it is unreliable; it exits at once if no toss is due)"
+        env: { GH_TOKEN: '${{ github.token }}' }
+        run: gh workflow run matchday-toss.yml --repo "$GITHUB_REPOSITORY" --ref main && echo "matchday-toss started" || echo "matchday-toss dispatch failed (its own cron is the back-up)"
       - uses: actions/checkout@v4
       - name: Wait for the keys (Ansh pastes them as repository secrets)
         id: keys
