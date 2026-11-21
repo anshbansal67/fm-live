@@ -1,0 +1,10 @@
+Of the 1,074 T20 batters Fine Margins rates, the one who plays most like Harry Brook is Mitchell Marsh, and the one who plays most like Marsh is Brook. They captain England and Australia in the five-match T20I series that began at the MCG on 21 November.
+
+Brook gets more out of the same method. In IPL numbers he strikes at 163 to Marsh's 155 and plays 26.0% dot balls to Marsh's 30.6%, with the same 21 balls per dismissal. His rating is +3.05 (range +1.7 to +4.3), 10th of 1,074. Marsh's is +1.20 (range −0.8 to +2.3), 64th. Ratings are points of win chance per innings against an average IPL batter.
+
+fine-margins.com/t20/player/harry-brook
+fine-margins.com/t20/player/mitchell-marsh
+
+Data: Fine Margins T20 ratings, Cricsheet ball-by-ball. Captains: ESPNcricinfo scorecard, 1st T20I.
+
+#CricketStats #CricketAnalytics #FineMargins
