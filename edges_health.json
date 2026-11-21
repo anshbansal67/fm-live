@@ -1,5 +1,5 @@
 {
- "ts": "2026-11-21T14:31:21Z",
+ "ts": "2026-11-21T15:35:22Z",
  "source": "mac",
  "overall": "FAIL",
  "checks": {
@@ -8,16 +8,16 @@
    "why": "last loop 0 min ago"
   },
   "gaps over 30 min (24 h)": {
-   "state": "WARN",
-   "why": "1 gap(s): 20 Nov 15:34-17:49 UTC (135 min)"
+   "state": "OK",
+   "why": "no gap over 30 min in the last 24 h"
   },
   "picks feed push": {
    "state": "OK",
-   "why": "last push to fm-live 63 min ago"
+   "why": "last push to fm-live 62 min ago"
   },
   "record push": {
    "state": "OK",
-   "why": "last push to fm-live 30 min ago"
+   "why": "last push to fm-live 25 min ago"
   },
   "OddsPapi": {
    "state": "FAIL",
@@ -29,7 +29,7 @@
   },
   "cloud run": {
    "state": "OK",
-   "why": "last cloud run 24 min ago (shadow, FAIL)"
+   "why": "last cloud run 28 min ago (shadow, FAIL)"
   },
   "TheRundown": {
    "state": "OK",
@@ -40,13 +40,7 @@
    "why": "no failures in the last hour"
   }
  },
- "gaps_24h": [
-  {
-   "start": "2026-11-20T15:34Z",
-   "end": "2026-11-20T17:49Z",
-   "minutes": 135
-  }
- ],
+ "gaps_24h": [],
  "status": "FAIL",
  "since": "2026-11-20T21:03:11Z",
  "reason": "OddsPapi: blocked: quota 251/250 (resets monthly)"
