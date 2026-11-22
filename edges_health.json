@@ -1,5 +1,5 @@
 {
- "ts": "2026-11-22T13:54:20Z",
+ "ts": "2026-11-22T14:57:21Z",
  "source": "mac",
  "overall": "FAIL",
  "checks": {
@@ -13,11 +13,11 @@
   },
   "picks feed push": {
    "state": "OK",
-   "why": "last push to fm-live 59 min ago"
+   "why": "last push to fm-live 62 min ago"
   },
   "record push": {
    "state": "OK",
-   "why": "last push to fm-live 0 min ago"
+   "why": "last push to fm-live 29 min ago"
   },
   "OddsPapi": {
    "state": "FAIL",
@@ -29,7 +29,7 @@
   },
   "cloud run": {
    "state": "OK",
-   "why": "last cloud run 17 min ago (shadow, FAIL)"
+   "why": "last cloud run 20 min ago (shadow, FAIL)"
   },
   "TheRundown": {
    "state": "OK",
