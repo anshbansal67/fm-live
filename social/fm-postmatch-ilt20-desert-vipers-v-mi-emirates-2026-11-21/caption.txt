@@ -1,0 +1,13 @@
+Desert Vipers v MI Emirates, ILT20, Dubai International Cricket Stadium, 21 November: how the model did.
+
+MI Emirates made 174, inside the model's middle half. Before the match the card had MI Emirates on 168 batting first, middle half 145 to 190, four in five 125 to 213.
+
+Every card gets scored like this, hits and misses. So far 4 of 6 first innings have landed in the middle half.
+
+What would you want us to score next?
+
+Result: ESPN. Model: Fine Margins engine.
+
+fine-margins.com/t20/edges/match/1557443
+
+#ILT20 #CricketStats #CricketAnalytics #FineMargins
