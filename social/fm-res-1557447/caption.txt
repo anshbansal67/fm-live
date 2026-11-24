@@ -1,0 +1,7 @@
+Gulf Giants v MI Emirates, ILT20: the forecast, then what happened.
+
+First-innings total: the model's middle 50% was 150 to 193; MI Emirates made 91. Below the model's middle 50%, which it should miss half the time.
+
+Of the six batters the model expected to score most, 0 made at least their expected runs.
+
+Every forecast is frozen before the start and published, hits and misses: fine-margins.com/t20/record
