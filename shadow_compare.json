@@ -1,14 +1,24 @@
 {
- "asof": "2026-11-24T08:37Z",
+ "asof": "2026-11-24T09:07Z",
  "since": "2026-11-23",
- "mac_picks": 0,
+ "mac_picks": 1,
  "cloud_picks": 0,
  "matched": 0,
- "mac_only": 0,
+ "mac_only": 1,
  "cloud_only": 0,
  "same_book": 0,
  "median_abs_price_diff": null,
  "median_minutes_cloud_minus_mac": null,
- "detail_started": [],
+ "detail_started": [
+  {
+   "match": "Australia v England",
+   "start": "2026-11-24T08:15Z",
+   "mac": {
+    "book": "boylesports",
+    "price": 2.1
+   },
+   "cloud": null
+  }
+ ],
  "note": "Counts cover every pick since the shadow start. Detail lists only picks whose match has started. A cloud-only pick still to start is counted, never shown."
 }
