@@ -1,5 +1,5 @@
 {
- "asof": "2026-11-24T07:29Z",
+ "asof": "2026-11-24T08:33Z",
  "stages": {
   "1": "Idea",
   "2": "Registered test on past prices",
@@ -13,9 +13,9 @@
    "lane": 2,
    "stage": 3,
    "what": "UK price at least 3% over Pinnacle's fair price, 12-48 h before, or at the toss",
-   "n": 0,
-   "scored": 0,
-   "clv": null,
+   "n": 1,
+   "scored": 1,
+   "clv": 0.0418,
    "se": null,
    "verdict_at": 200,
    "status": "live paper: the record above"
@@ -37,12 +37,12 @@
    "lane": 2,
    "stage": 3,
    "what": "the same rule on three more competitions (added 15 Nov; the backtest covered IPL and PSL); their picks count towards the 200",
-   "n": 0,
-   "scored": 0,
-   "clv": null,
+   "n": 1,
+   "scored": 1,
+   "clv": 0.0418,
    "se": null,
    "verdict_at": 200,
-   "status": "shadow until 30 Nov, then live paper inside the record above"
+   "status": "live paper, inside the record above"
   },
   {
    "name": "The interim reads (EDGES-VERDICT-SEQ)",
