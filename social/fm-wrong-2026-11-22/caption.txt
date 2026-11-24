@@ -1,0 +1,11 @@
+Where we got it wrong this week: Kathmandu Gorkhas v Chitwan Rhinos.
+
+Chitwan Rhinos made 204 batting first. The model had them on 152, with a middle half of 128 to 178 and four in five between 102 and 203. That is outside the range we gave.
+
+We post the misses as clearly as the hits. What did the model not see?
+
+Result: ESPN. Model: Fine Margins engine.
+
+fine-margins.com/t20/edges/match/1558611
+
+#CricketStats #CricketAnalytics #FineMargins
