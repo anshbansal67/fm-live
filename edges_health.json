@@ -1,5 +1,5 @@
 {
- "ts": "2026-11-24T06:23:33Z",
+ "ts": "2026-11-24T07:28:13Z",
  "source": "mac",
  "overall": "FAIL",
  "checks": {
@@ -13,7 +13,7 @@
   },
   "picks feed push": {
    "state": "OK",
-   "why": "last push to fm-live 62 min ago"
+   "why": "last push to fm-live 63 min ago"
   },
   "record push": {
    "state": "OK",
@@ -25,11 +25,11 @@
   },
   "the-odds-api": {
    "state": "OK",
-   "why": "441 credits left"
+   "why": "439 credits left"
   },
   "cloud run": {
    "state": "OK",
-   "why": "last cloud run 16 min ago (shadow, FAIL)"
+   "why": "last cloud run 21 min ago (shadow, FAIL)"
   },
   "TheRundown": {
    "state": "OK",
