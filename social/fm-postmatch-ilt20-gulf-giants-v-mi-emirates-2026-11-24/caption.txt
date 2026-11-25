@@ -1,0 +1,15 @@
+Gulf Giants v MI Emirates, ILT20, Dubai International Cricket Stadium, 24 November: how the model did.
+
+MI Emirates made 91, below the bottom of the range we gave four innings in five. Before the match the card had MI Emirates on 173 batting first, middle half 150 to 193, four in five 128 to 216.
+
+Every card gets scored like this, hits and misses. So far 11 of 15 first innings have landed in the middle half.
+
+What we got wrong: we had MI Emirates on 173 batting first, and they made 91, 82 runs fewer. That's outside the range we gave four in five innings (128 to 216).
+
+What would you want us to score next?
+
+Result: ESPN. Model: Fine Margins engine.
+
+fine-margins.com/t20/edges/match/1557447
+
+#ILT20 #CricketStats #CricketAnalytics #FineMargins
