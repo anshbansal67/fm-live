@@ -3,6 +3,11 @@ a UK bookmaker's match-winner price >= 3% above Pinnacle's no-vig price at the s
 QUOTA: OddsPapi free = 250 metered requests a month. Prices come ONLY from /v4/historical-odds (does not count, but is refused once the month's 250 are spent; <= 3 bookmakers a call, 5 s cooldown);
 fixture lists are metered, so they are cached per tournament and refreshed at most every 3 days, and never when /v4/account (unmetered) shows
 request_count >= request_limit - 25.
+25 Nov (Claude; Ansh's morning brief: quota 251/250 since 15 Nov, spent by one-off research pulls on 14 Nov): a hard budget. Metered calls stop
+at 200 of the 250 (EP_BUDGET), fixture lists refresh weekly (not every 3 days), at most 2 metered calls a run (EP_MAX_METERED_RUN; the
+leagues first, then T20I series), a quiet league (nothing in its cached list for 10 days, list under 3 weeks old) isn't refreshed, and the
+T20I catalogue refreshes fortnightly. Research scripts no longer use this key (oddspapi_pull.py / odds_probe.py refuse without
+FM_OP_RESEARCH=1).
   python3 early_picks.py            hourly sweep: fixtures 1-48 h out -> snapshot (early_odds.jsonl); B picks 12-48 h out (arm 'B')
   python3 early_picks.py --toss     toss window: fixtures starting within 35 min, polled every 60 s (EP_TOSS_POLL_S) until the start (arm 'BT')
   python3 early_picks.py --dry      no writes"""
@@ -44,7 +49,7 @@ def get(path, p, cool):
 def quota_ok():
     a = get('account', {}, 0.5) or {}
     for s in a.get('subscriptions', []):
-        if s.get('is_active'): return s.get('request_count', 0) < s.get('request_limit', 0) - 25, s.get('request_count'), s.get('request_limit')
+        if s.get('is_active'): return s.get('request_count', 0) < min(int(os.environ.get('EP_BUDGET', '200')), s.get('request_limit', 0) - 25), s.get('request_count'), s.get('request_limit')
     return False, None, None
 def t20i_tourns(ok):
     """15 Nov 17:20 (coordinator): men's T20I series join the board. OddsPapi files each series as its own tournament, so the list comes
@@ -52,7 +57,7 @@ def t20i_tourns(ok):
     'T20' or 'Twenty20' in the name, not women's, not A sides, with fixtures to come."""
     import re
     f = OD + 'op_tourn_27.json'
-    if ok and (not os.path.exists(f) or time.time() - os.path.getmtime(f) > 7 * 86400):
+    if ok and (not os.path.exists(f) or time.time() - os.path.getmtime(f) > 14 * 86400):      # 25 Nov: fortnightly (was weekly)
         d = get('tournaments', {'sportId': 27}, 2.2)
         if isinstance(d, list) and d: json.dump(d, open(f, 'w'))
     try: cat = json.load(open(f))
@@ -61,12 +66,19 @@ def t20i_tourns(ok):
             and not re.search(r'wom|\bA\b|\bU19\b', t.get('tournamentName', ''), re.I) and (t.get('futureFixtures') or t.get('upcomingFixtures'))}
 def fixtures(now):
     ok, used, lim = quota_ok(); out = []
-    TT = dict(TOURN, **t20i_tourns(ok))
-    for tid in TT:
+    TT = {**TOURN, **t20i_tourns(ok)}   # 20 Nov: dict(..., **x) failed on integer tournament ids (TypeError since 15 Nov)
+    spent = 0; cap = int(os.environ.get('EP_MAX_METERED_RUN', '2'))
+    for tid in TT:   # the leagues come first in TT, then the T20I series
         f = OD + f'live_fix_{tid}.json'
-        stale = (not os.path.exists(f)) or (time.time() - os.path.getmtime(f) > 3*86400)
-        if stale and ok:
-            d = get('fixtures', {'tournamentId': tid}, 2.2)
+        age = (time.time() - os.path.getmtime(f)) if os.path.exists(f) else None
+        stale = age is None or age > 7 * 86400      # 25 Nov: weekly (was every 3 days)
+        if stale and age is not None and age < 21 * 86400:   # a quiet league: nothing in the next 10 days in its list -> leave it
+            try:
+                soon = [x for x in json.load(open(f)) if x.get('statusId') == 0 and now < pd.Timestamp(x['startTime']) <= now + pd.Timedelta(days=10)]
+                if not soon: stale = False
+            except Exception: pass
+        if stale and ok and spent < cap:
+            d = get('fixtures', {'tournamentId': tid}, 2.2); spent += 1
             if isinstance(d, list): json.dump(d, open(f, 'w'))
         if not os.path.exists(f) and os.path.exists(OD + f'fix_{tid}.json'): f = OD + f'fix_{tid}.json'   # 15 Nov: quota spent -> the 14 Nov full lists (no metered call)
         if os.path.exists(f): out += [dict(x, _t=TT[tid]) for x in json.load(open(f)) if x.get('statusId') == 0 and pd.Timestamp(x['startTime']) > now]
