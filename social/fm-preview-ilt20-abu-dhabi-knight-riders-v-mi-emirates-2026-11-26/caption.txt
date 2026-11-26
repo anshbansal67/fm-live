@@ -1,13 +1,11 @@
 Abu Dhabi Knight Riders v MI Emirates, ILT20, Zayed Cricket Stadium, 26 November.
 
-Sides batting first have won 20 of 44 ILT20 games at Abu Dhabi with a result. The first-innings par there over the last three seasons is 166. Before the toss the model has Abu Dhabi Knight Riders on 162 batting first and MI Emirates on 165. Andre Fletcher and Nicholas Pooran are each side's likeliest 30.
+Sides batting first have won 20 of 44 ILT20 games at Abu Dhabi with a result. The first-innings par there over the last three seasons is 166.  Andre Fletcher and Nicholas Pooran are each side's likeliest 30.
 
-The XIs are predicted from this season's squads until the team sheets are out.
+The XIs are predicted from each side's last XI until the team sheets are out.
 
 Who bats first if you win the toss here?
 
 Ground record: Cricsheet ball-by-ball. Model: Fine Margins engine.
 
 fine-margins.com/t20/edges/match/1557449
-
-#ILT20 #ADKR #MIEmirates #CricketStats #FineMargins
