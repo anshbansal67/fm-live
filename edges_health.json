@@ -1,11 +1,11 @@
 {
- "ts": "2026-11-27T22:46:54Z",
+ "ts": "2026-11-27T23:47:36Z",
  "source": "mac",
  "overall": "FAIL",
  "checks": {
   "recorder loop": {
-   "state": "WARN",
-   "why": "last loop 20 min ago"
+   "state": "OK",
+   "why": "last loop 0 min ago"
   },
   "gaps over 30 min (24 h)": {
    "state": "OK",
@@ -13,11 +13,11 @@
   },
   "picks feed push": {
    "state": "OK",
-   "why": "last push to fm-live 66 min ago"
+   "why": "last push to fm-live 60 min ago"
   },
   "record push": {
    "state": "OK",
-   "why": "last push to fm-live 52 min ago"
+   "why": "last push to fm-live 15 min ago"
   },
   "OddsPapi": {
    "state": "FAIL",
@@ -29,7 +29,7 @@
   },
   "cloud run": {
    "state": "OK",
-   "why": "last cloud run 9 min ago (shadow, FAIL)"
+   "why": "last cloud run 10 min ago (shadow, FAIL)"
   },
   "TheRundown": {
    "state": "OK",
