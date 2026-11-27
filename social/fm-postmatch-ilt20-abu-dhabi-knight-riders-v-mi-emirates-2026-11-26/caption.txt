@@ -1,0 +1,15 @@
+Abu Dhabi Knight Riders v MI Emirates, ILT20, Zayed Cricket Stadium, 26 November: how the model did.
+
+MI Emirates made 207, above the top of the range we gave four innings in five. Before the match the card had MI Emirates on 155 batting first, middle half 136 to 177, four in five 113 to 195.
+
+Every card gets scored like this, hits and misses. So far 13 of 19 first innings have landed in the middle half.
+
+What we got wrong: we had MI Emirates on 155 batting first, and they made 207, 52 runs more. That's outside the range we gave four in five innings (113 to 195).
+
+What would you want us to score next?
+
+Result: ESPN. Model: Fine Margins engine.
+
+fine-margins.com/t20/edges/match/1557449
+
+#ILT20 #CricketStats #CricketAnalytics #FineMargins
