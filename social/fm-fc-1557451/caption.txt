@@ -1,0 +1,5 @@
+Desert Vipers v MI Emirates, ILT20, 28 Nov: who the Fine Margins model expects to score.
+
+Expected runs for each batter, and his chance of making 30 or more, from the model's player projections, published before the start. After the match, the same numbers go up against what happened, hits and misses: fine-margins.com/t20/record
+
+Babar Azam is the model's top expected scorer at 26.9 runs, with a 39% chance of 30+.
