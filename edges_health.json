@@ -1,5 +1,5 @@
 {
- "ts": "2026-11-28T11:31:31Z",
+ "ts": "2026-11-28T12:31:40Z",
  "source": "mac",
  "overall": "FAIL",
  "checks": {
@@ -13,11 +13,11 @@
   },
   "picks feed push": {
    "state": "OK",
-   "why": "last push to fm-live 62 min ago"
+   "why": "last push to fm-live 58 min ago"
   },
   "record push": {
    "state": "OK",
-   "why": "last push to fm-live 30 min ago"
+   "why": "last push to fm-live 21 min ago"
   },
   "OddsPapi": {
    "state": "FAIL",
